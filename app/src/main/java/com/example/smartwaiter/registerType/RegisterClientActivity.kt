@@ -14,6 +14,7 @@ class RegisterClientActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register_client)
+        supportActionBar?.hide()
         val btn = findViewById<Button>(R.id.btnSend)
         val email = findViewById<EditText>(R.id.txtEmail)
         val pwd = findViewById<EditText>(R.id.txtPwd)
