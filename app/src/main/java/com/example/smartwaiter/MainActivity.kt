@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import com.example.smartwaiter.registerType.RegisterClientActivity
+import com.example.smartwaiter.registerType.RegisterOwnerActivity
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -16,11 +17,11 @@ class MainActivity : AppCompatActivity() {
         val register = findViewById<TextView>(R.id.txtRegister)!!
 
         register.setOnClickListener {
-            load()
+            loadForm()
         }
     }
 
-    fun load(){
+    private fun loadForm(){
         val builder = AlertDialog.Builder(this)
         val view = layoutInflater.inflate(R.layout.dialog_register_options,null)
         val owner = view.findViewById<TextView>(R.id.btnOwner)!!
@@ -39,12 +40,15 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun formRegisterClient(){
+    private fun formRegisterOwner(){
+        val intentRegister = Intent(this, RegisterOwnerActivity::class.java)
+        startActivity(intentRegister)
+    }
+
+    private fun formRegisterClient(){
         val intentRegister = Intent(this, RegisterClientActivity::class.java)
         startActivity(intentRegister)
     }
 
-    fun formRegisterOwner(){
 
-    }
 }
