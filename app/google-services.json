@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "954408853217",
+    "project_id": "smartwaiterservice",
+    "storage_bucket": "smartwaiterservice.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:954408853217:android:c26b7be37d70c40bcf21a0",
+        "android_client_info": {
+          "package_name": "com.example.smartwaiter"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "954408853217-0rf1up0mbhkshvgbndd8tp7b4q2osqie.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.smartwaiter",
+            "certificate_hash": "4cb65e3c8f7267f2d24da1435525e8df1a76592f"
+          }
+        },
+        {
+          "client_id": "954408853217-nqigi7ufvkba51qaqs41svei9rogvrtg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBX3Mp5-zM0WdnpJVSutn2-00k4cA8u4Nk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "954408853217-nqigi7ufvkba51qaqs41svei9rogvrtg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
