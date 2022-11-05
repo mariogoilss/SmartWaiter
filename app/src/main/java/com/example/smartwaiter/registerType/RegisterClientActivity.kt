@@ -9,9 +9,11 @@ import android.widget.Toast
 import com.example.smartwaiter.MainActivity
 import com.example.smartwaiter.R
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 
 class RegisterClientActivity : AppCompatActivity() {
 
+    private val db = FirebaseFirestore.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -20,6 +22,7 @@ class RegisterClientActivity : AppCompatActivity() {
         val btn = findViewById<Button>(R.id.btnSend)
         val email = findViewById<EditText>(R.id.txtEmail)
         val pwd = findViewById<EditText>(R.id.txtPwd)
+        val name = findViewById<EditText>(R.id.txtUName)
 
 
 
@@ -28,6 +31,7 @@ class RegisterClientActivity : AppCompatActivity() {
             if (email.text.isNotEmpty() && pwd.text.isNotEmpty()){
                 FirebaseAuth.getInstance().createUserWithEmailAndPassword(email.text.toString(),pwd.text.toString()).addOnCompleteListener {
                     if (it.isSuccessful){
+                        saveInBBDD(name.text.toString(),email.text.toString())
                         Toast.makeText(this, "Registro completo, ya puede disfrutar de la aplicacion", Toast.LENGTH_SHORT).show()
                         val intent = Intent(this, MainActivity::class.java)
                         startActivity(intent)
@@ -40,6 +44,17 @@ class RegisterClientActivity : AppCompatActivity() {
             }
 
         }
+    }
+
+
+    private fun saveInBBDD(name:String, email:String){
+        db.collection("users").document(email).set(
+            hashMapOf(
+                "usrName" to name,
+                "usrMail" to email,
+                "usrFirstInit" to true
+            )
+        )
     }
 
 
