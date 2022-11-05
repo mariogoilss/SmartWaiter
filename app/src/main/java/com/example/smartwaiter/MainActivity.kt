@@ -50,5 +50,9 @@ class MainActivity : AppCompatActivity() {
         startActivity(intentRegister)
     }
 
+    override fun onBackPressed() {
+        finishAffinity()
+    }
+
 
 }
