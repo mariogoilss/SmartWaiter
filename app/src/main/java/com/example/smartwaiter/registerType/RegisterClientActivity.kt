@@ -51,7 +51,6 @@ class RegisterClientActivity : AppCompatActivity() {
         db.collection("users").document(email).set(
             hashMapOf(
                 "usrName" to name,
-                "usrMail" to email,
                 "usrFirstInit" to true
             )
         )

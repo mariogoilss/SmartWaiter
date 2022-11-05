@@ -47,11 +47,10 @@ class RegisterOwnerActivity : AppCompatActivity() {
     }
 
     private fun saveInBBDD(name:String, email:String, cif:String){
-        db.collection("organization").document(email).set(
+        db.collection("organizations").document(email).set(
             hashMapOf(
                 "orgName" to name,
                 "orgCif" to cif,
-                "orgMail" to email,
                 "orgFirstInit" to true
                 )
         )
