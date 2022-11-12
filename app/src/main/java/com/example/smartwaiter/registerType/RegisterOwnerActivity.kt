@@ -51,6 +51,8 @@ class RegisterOwnerActivity : AppCompatActivity() {
             hashMapOf(
                 "orgName" to name,
                 "orgCif" to cif,
+                "orgFoodList" to arrayListOf(""),
+                "orgDrinkList" to arrayListOf(""),
                 "orgFirstInit" to true
                 )
         )

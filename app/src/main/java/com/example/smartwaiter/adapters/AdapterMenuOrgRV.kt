@@ -26,7 +26,7 @@ class AdapterMenuOrgRV : RecyclerView.Adapter<AdapterMenuOrgRV.ViewHolder>(){
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
-        return ViewHolder(layoutInflater.inflate(R.layout.list_event_usu,parent, false)
+        return ViewHolder(layoutInflater.inflate(R.layout.card_menu_org,parent, false)
         )
     }
 
@@ -37,6 +37,7 @@ class AdapterMenuOrgRV : RecyclerView.Adapter<AdapterMenuOrgRV.ViewHolder>(){
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
         fun bind(itemMenu: Menu, context: Context, adapter: AdapterMenuOrgRV, correo: ArrayList<Menu>) {
+
 
             itemView.setOnClickListener(View.OnClickListener {
 
