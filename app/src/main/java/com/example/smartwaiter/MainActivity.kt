@@ -12,6 +12,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.smartwaiter.organizationBranch.MainOrganization
+import com.example.smartwaiter.organizationBranch.MainOrganizationNav
 import com.example.smartwaiter.registerType.RegisterClientActivity
 import com.example.smartwaiter.registerType.RegisterOwnerActivity
 import com.google.firebase.auth.FirebaseAuth
@@ -70,7 +71,7 @@ class MainActivity : AppCompatActivity() {
         if (email != null) {
             db.collection("organizations").document(email).get().addOnSuccessListener {
                 if(it.exists()){
-                    val intent = Intent(this, MainOrganization::class.java)
+                    val intent = Intent(this, MainOrganizationNav::class.java)
                     intent.putExtra("email", email)
                     startActivity(intent)
                 }else{
