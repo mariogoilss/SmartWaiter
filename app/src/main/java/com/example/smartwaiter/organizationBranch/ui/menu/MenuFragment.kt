@@ -1,26 +1,21 @@
-package com.example.smartwaiter.organizationBranch.ui.dashboard
+package com.example.smartwaiter.organizationBranch.ui.menu
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
 import android.widget.FrameLayout
-import android.widget.TableLayout
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
-import androidx.lifecycle.ViewModelProvider
 import com.example.smartwaiter.R
-import com.example.smartwaiter.databinding.FragmentDashboardBinding
+import com.example.smartwaiter.databinding.FragmentMenuBinding
 import com.example.smartwaiter.menu.DrinkFragment
 import com.example.smartwaiter.menu.FoodFragment
 import com.google.android.material.tabs.TabLayout
 
-class DashboardFragment : Fragment() {
+class MenuFragment : Fragment() {
 
-    private var _binding: FragmentDashboardBinding? = null
+    private var _binding: FragmentMenuBinding? = null
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -32,7 +27,7 @@ class DashboardFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
 
-        _binding = FragmentDashboardBinding.inflate(inflater, container, false)
+        _binding = FragmentMenuBinding.inflate(inflater, container, false)
 
         var tabLayout: TabLayout = binding.tabLayout
         var frameLayout:FrameLayout = binding.frameLayout

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".organizationBranch.ui.dashboard.DashboardFragment">
+    tools:context=".organizationBranch.ui.menu.MenuFragment">
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout"
