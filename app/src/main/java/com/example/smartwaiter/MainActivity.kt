@@ -9,22 +9,11 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.example.smartwaiter.organizationBranch.MainOrganization
 import com.example.smartwaiter.organizationBranch.MainOrganizationNav
 import com.example.smartwaiter.registerType.RegisterClientActivity
 import com.example.smartwaiter.registerType.RegisterOwnerActivity
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.QuerySnapshot
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.tasks.await
-import java.lang.Exception
 
 
 private var GOOGLE_SIGN_IN = 1

@@ -4,10 +4,19 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.EditText
+import android.widget.FrameLayout
+import android.widget.TableLayout
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModelProvider
+import com.example.smartwaiter.R
 import com.example.smartwaiter.databinding.FragmentDashboardBinding
+import com.example.smartwaiter.menu.DrinkFragment
+import com.example.smartwaiter.menu.FoodFragment
+import com.google.android.material.tabs.TabLayout
 
 class DashboardFragment : Fragment() {
 
@@ -22,16 +31,44 @@ class DashboardFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val dashboardViewModel =
-            ViewModelProvider(this).get(DashboardViewModel::class.java)
 
         _binding = FragmentDashboardBinding.inflate(inflater, container, false)
+
+        var tabLayout: TabLayout = binding.tabLayout
+        var frameLayout:FrameLayout = binding.frameLayout
         val root: View = binding.root
 
-        val textView: TextView = binding.textDashboard
-        dashboardViewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
-        }
+        var fragment:Fragment
+        fragment = FoodFragment()
+        var fragmentManager = activity?.supportFragmentManager
+        var fragmentTransaction = fragmentManager!!.beginTransaction()
+        fragmentTransaction!!.replace(R.id.frameLayout, fragment)
+        fragmentTransaction!!.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+        fragmentTransaction!!.commit()
+
+        tabLayout!!.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab) {
+                // creating cases for fragment
+                when (tab.position) {
+                    0 -> fragment = FoodFragment()
+                    1 -> fragment = DrinkFragment()
+
+                }
+                val fm = activity?.supportFragmentManager
+                val ft = fm?.beginTransaction()
+                ft?.replace(R.id.frameLayout, fragment)
+                ft?.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                ft?.commit()
+
+            }
+
+            override fun onTabUnselected(tab: TabLayout.Tab) {
+            }
+
+            override fun onTabReselected(tab: TabLayout.Tab) {
+            }
+        })
+
         return root
     }
 
