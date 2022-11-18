@@ -6,11 +6,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.CheckBox
 import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import com.example.smartwaiter.R
+import com.example.smartwaiter.inteface.MenuItem
+import com.example.smartwaiter.inteface.Organization
+import com.google.firebase.firestore.FirebaseFirestore
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -24,7 +28,8 @@ private const val ARG_PARAM2 = "param2"
  * create an instance of this fragment.
  */
 class DrinkFragment : Fragment() {
-    // TODO: Rename and change types of parameters
+
+    private val db = FirebaseFirestore.getInstance()
     private var param1: String? = null
     private var param2: String? = null
 
@@ -53,10 +58,61 @@ class DrinkFragment : Fragment() {
     private fun loadDrinkFragment(){
         val builder = AlertDialog.Builder(context!!)
         val view = layoutInflater.inflate(R.layout.dialog_menu_item_add,null)
-        builder.setView(view)
 
+
+        // Fragments Elements
+        val name = view.findViewById<TextView>(R.id.txtNameMenuDialog)!!
+        val description = view.findViewById<TextView>(R.id.txtDescMenuDialog)!!
+        val cbx1 = view.findViewById<CheckBox>(R.id.checkBox1)!!
+        val cbx2 = view.findViewById<CheckBox>(R.id.checkBox2)!!
+        val cbx3 = view.findViewById<CheckBox>(R.id.checkBox3)!!
+        val cbx4 = view.findViewById<CheckBox>(R.id.checkBox4)!!
+        val cbx5 = view.findViewById<CheckBox>(R.id.checkBox5)!!
+        val cbx6 = view.findViewById<CheckBox>(R.id.checkBox6)!!
+        val cbx7 = view.findViewById<CheckBox>(R.id.checkBox7)!!
+        val cbx8 = view.findViewById<CheckBox>(R.id.checkBox8)!!
+        val price = view.findViewById<TextView>(R.id.txtPriceMenuDialog)!!
+        val save = view.findViewById<TextView>(R.id.btnSaveMenuDialog)!!
+
+        // Fragment Show
+        builder.setView(view)
         val dialog = builder.create() //<- se crea el dialog
         dialog.show() //<- se muestra el showdialog
+
+        // Fragment Functions
+        // check_checkBox(cbx1, cbx2,cbx3,cbx4,cbx5, cbx6, cbx7,cbx8)
+
+    }
+
+
+    private fun getOfBBDD(ide:String): Organization{
+        lateinit var organization: Organization
+        db.collection("organizations").document(ide).get().addOnSuccessListener {
+            organization.orgName = it.get("orgName") as String
+            organization.orgCif = it.get("orgCif") as String
+            organization.orgFoodList = it.get("orgFoodList") as ArrayList<MenuItem>
+            organization.orgDrinkList = it.get("orgDrinkList") as ArrayList<MenuItem>
+            organization.orgFirstInit = it.get("orgFirstInit") as Boolean
+        }
+        return organization
+    }
+
+
+
+    fun check_checkBox(cbx1:CheckBox, cbx2:CheckBox,cbx3:CheckBox,cbx4:CheckBox,cbx5:CheckBox,
+    cbx6:CheckBox, cbx7:CheckBox,cbx8:CheckBox): ArrayList<Int>{
+        var alergensList: ArrayList<Int> = arrayListOf()
+
+        if (cbx1.isChecked) {alergensList.add(1)}
+        if (cbx2.isChecked) {alergensList.add(2)}
+        if (cbx3.isChecked) {alergensList.add(3)}
+        if (cbx4.isChecked) {alergensList.add(4)}
+        if (cbx5.isChecked) {alergensList.add(5)}
+        if (cbx6.isChecked) {alergensList.add(6)}
+        if (cbx7.isChecked) {alergensList.add(7)}
+        if (cbx8.isChecked) {alergensList.add(8)}
+
+        return alergensList
 
     }
 

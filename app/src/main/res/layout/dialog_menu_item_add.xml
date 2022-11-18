@@ -29,7 +29,7 @@
             app:layout_constraintVertical_bias="0.056" />
 
         <EditText
-            android:id="@+id/editTextTextPersonName"
+            android:id="@+id/txtNameMenuDialog"
             android:layout_width="240dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
@@ -57,7 +57,7 @@
             app:layout_constraintVertical_bias="0.556" />
 
         <EditText
-            android:id="@+id/editTextTextMultiLine"
+            android:id="@+id/txtDescMenuDialog"
             android:layout_width="320dp"
             android:layout_height="117dp"
             android:layout_marginStart="4dp"
@@ -83,7 +83,7 @@
             app:layout_constraintVertical_bias="0.858" />
 
         <EditText
-            android:id="@+id/editTextNumberDecimal"
+            android:id="@+id/txtPriceMenuDialog"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:ems="10"
@@ -92,150 +92,6 @@
             app:layout_constraintHorizontal_bias="0.057"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView16" />
-
-        <LinearLayout
-            android:id="@+id/radioGroup"
-            android:layout_width="330dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:orientation="vertical"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.508"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView17">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal">
-
-                <CheckBox
-                    android:id="@+id/checkBox3"
-                    android:layout_width="32dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1" />
-
-                <ImageView
-                    android:id="@+id/imw1"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:layout_weight="1"
-                    app:srcCompat="@drawable/gluten"
-                    tools:layout_editor_absoluteX="67dp"
-                    tools:layout_editor_absoluteY="300dp" />
-
-                <CheckBox
-                    android:id="@+id/checkBox5"
-                    android:layout_width="32dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1" />
-
-                <ImageView
-                    android:id="@+id/imw2"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:layout_weight="1"
-                    app:srcCompat="@drawable/crustaceos"
-                    tools:layout_editor_absoluteX="154dp"
-                    tools:layout_editor_absoluteY="300dp" />
-
-                <CheckBox
-                    android:id="@+id/checkBox6"
-                    android:layout_width="32dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1" />
-
-                <ImageView
-                    android:id="@+id/imw3"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:layout_weight="1"
-                    app:srcCompat="@drawable/huevos"
-                    tools:layout_editor_absoluteX="242dp"
-                    tools:layout_editor_absoluteY="300dp" />
-
-                <CheckBox
-                    android:id="@+id/checkBox7"
-                    android:layout_width="32dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1" />
-
-                <ImageView
-                    android:id="@+id/imw4"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:layout_weight="1"
-                    app:srcCompat="@drawable/pescado"
-                    tools:layout_editor_absoluteX="330dp"
-                    tools:layout_editor_absoluteY="300dp" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="10dp"
-                android:orientation="horizontal"></LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal">
-
-                <CheckBox
-                    android:id="@+id/checkBox8"
-                    android:layout_width="32dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1" />
-
-                <ImageView
-                    android:id="@+id/imageView9"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:layout_weight="1"
-                    app:srcCompat="@drawable/cacahuetes" />
-
-                <CheckBox
-                    android:id="@+id/checkBox9"
-                    android:layout_width="32dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1" />
-
-                <ImageView
-                    android:id="@+id/imageView10"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:layout_weight="1"
-                    app:srcCompat="@drawable/soja" />
-
-                <CheckBox
-                    android:id="@+id/checkBox10"
-                    android:layout_width="32dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1" />
-
-                <ImageView
-                    android:id="@+id/imageView11"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:layout_weight="1"
-                    app:srcCompat="@drawable/lacteos" />
-
-                <CheckBox
-                    android:id="@+id/checkBox11"
-                    android:layout_width="32dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1" />
-
-                <ImageView
-                    android:id="@+id/imageView12"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:layout_weight="1"
-                    app:srcCompat="@drawable/secos" />
-
-            </LinearLayout>
-
-        </LinearLayout>
 
         <TextView
             android:id="@+id/textView18"
@@ -251,13 +107,13 @@
             app:layout_constraintVertical_bias="0.217" />
 
         <Button
-            android:id="@+id/button"
+            android:id="@+id/btnSaveMenuDialog"
             android:layout_width="180dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="28dp"
             android:layout_marginTop="444dp"
             android:text="gUARDAR"
-            app:layout_constraintStart_toEndOf="@+id/editTextNumberDecimal"
+            app:layout_constraintStart_toEndOf="@+id/txtPriceMenuDialog"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
@@ -265,9 +121,162 @@
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:layout_marginTop="28dp"
-            app:layout_constraintStart_toEndOf="@+id/editTextTextPersonName"
+            app:layout_constraintStart_toEndOf="@+id/txtNameMenuDialog"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@android:drawable/ic_menu_report_image" />
+
+        <RadioGroup
+            android:id="@+id/rpgMenuDialog"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.222"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView17"
+            app:layout_constraintVertical_bias="0.0">
+
+            <LinearLayout
+                android:id="@+id/HorizontalLayout"
+                android:layout_width="330dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <CheckBox
+                        android:id="@+id/checkBox1"
+                        android:layout_width="32dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1" />
+
+                    <ImageView
+                        android:id="@+id/imw1"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_weight="1"
+                        app:srcCompat="@drawable/gluten"
+                        tools:layout_editor_absoluteX="67dp"
+                        tools:layout_editor_absoluteY="300dp" />
+
+                    <CheckBox
+                        android:id="@+id/checkBox2"
+                        android:layout_width="32dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1" />
+
+                    <ImageView
+                        android:id="@+id/imw2"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_weight="1"
+                        app:srcCompat="@drawable/crustaceos"
+                        tools:layout_editor_absoluteX="154dp"
+                        tools:layout_editor_absoluteY="300dp" />
+
+                    <CheckBox
+                        android:id="@+id/checkBox3"
+                        android:layout_width="32dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1" />
+
+                    <ImageView
+                        android:id="@+id/imw3"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_weight="1"
+                        app:srcCompat="@drawable/huevos"
+                        tools:layout_editor_absoluteX="242dp"
+                        tools:layout_editor_absoluteY="300dp" />
+
+                    <CheckBox
+                        android:id="@+id/checkBox4"
+                        android:layout_width="32dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1" />
+
+                    <ImageView
+                        android:id="@+id/imw4"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_weight="1"
+                        app:srcCompat="@drawable/pescado"
+                        tools:layout_editor_absoluteX="330dp"
+                        tools:layout_editor_absoluteY="300dp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="10dp"
+                    android:orientation="horizontal"></LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <CheckBox
+                        android:id="@+id/checkBox5"
+                        android:layout_width="32dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1" />
+
+                    <ImageView
+                        android:id="@+id/imageView9"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_weight="1"
+                        app:srcCompat="@drawable/cacahuetes" />
+
+                    <CheckBox
+                        android:id="@+id/checkBox6"
+                        android:layout_width="32dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1" />
+
+                    <ImageView
+                        android:id="@+id/imageView10"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_weight="1"
+                        app:srcCompat="@drawable/soja" />
+
+                    <CheckBox
+                        android:id="@+id/checkBox7"
+                        android:layout_width="32dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1" />
+
+                    <ImageView
+                        android:id="@+id/imageView11"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_weight="1"
+                        app:srcCompat="@drawable/lacteos" />
+
+                    <CheckBox
+                        android:id="@+id/checkBox8"
+                        android:layout_width="32dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1" />
+
+                    <ImageView
+                        android:id="@+id/imageView12"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_weight="1"
+                        app:srcCompat="@drawable/secos" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+        </RadioGroup>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
