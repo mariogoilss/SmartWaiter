@@ -5,22 +5,42 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.CheckBox
 import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.example.smartwaiter.Prefs.PreLoad.Companion.prefs
 import com.example.smartwaiter.R
+import com.example.smartwaiter.adapters.AdapterMenuOrgRV
 import com.example.smartwaiter.inteface.MenuItem
 import com.example.smartwaiter.inteface.Organization
+import com.google.firebase.firestore.DocumentChange
+import com.google.firebase.firestore.FieldPath
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.QuerySnapshot
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.tasks.await
+import java.lang.Exception
 
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
+
+/*
+ * DECLARAMOS LA VARIBLES NECESARIAS PARA UTILIZAR
+ * RECYCLERVIEW @MiApadatorRVeven
+ */
+lateinit var recyclerViewDrinkListOrg: RecyclerView
+var arrayDrinkListOrg:ArrayList<MenuItem> = ArrayList()
+val adapterMenuOrgRV : AdapterMenuOrgRV = AdapterMenuOrgRV()
 
 /**
  * A simple [Fragment] subclass.
@@ -48,6 +68,20 @@ class DrinkFragment : Fragment() {
         // Inflate the layout for this fragment
         var view = inflater.inflate(R.layout.fragment_drink, container, false)
         var addDrink = view.findViewById<ImageButton>(R.id.btnAddDrink)
+
+        runBlocking {
+            val job : Job = launch(context = Dispatchers.Default) {
+                val datos : QuerySnapshot = getDataFromFireStore() as QuerySnapshot
+                obtenerDatos(datos as QuerySnapshot?)
+            }
+            job.join()
+        }
+        recyclerViewDrinkListOrg = view.findViewById<RecyclerView>(R.id.rvMenuDrinkOrg)
+        recyclerViewDrinkListOrg.setHasFixedSize(true)
+        recyclerViewDrinkListOrg.layoutManager = LinearLayoutManager(context!!)
+        adapterMenuOrgRV.AdapterMenuOrgRV(arrayDrinkListOrg, context!!)
+        recyclerViewDrinkListOrg.adapter = adapterMenuOrgRV
+
         addDrink.setOnClickListener {
             Toast.makeText(context, "si", Toast.LENGTH_SHORT).show()
             loadDrinkFragment()
@@ -63,14 +97,7 @@ class DrinkFragment : Fragment() {
         // Fragments Elements
         val name = view.findViewById<TextView>(R.id.txtNameMenuDialog)!!
         val description = view.findViewById<TextView>(R.id.txtDescMenuDialog)!!
-        val cbx1 = view.findViewById<CheckBox>(R.id.checkBox1)!!
-        val cbx2 = view.findViewById<CheckBox>(R.id.checkBox2)!!
-        val cbx3 = view.findViewById<CheckBox>(R.id.checkBox3)!!
-        val cbx4 = view.findViewById<CheckBox>(R.id.checkBox4)!!
-        val cbx5 = view.findViewById<CheckBox>(R.id.checkBox5)!!
-        val cbx6 = view.findViewById<CheckBox>(R.id.checkBox6)!!
-        val cbx7 = view.findViewById<CheckBox>(R.id.checkBox7)!!
-        val cbx8 = view.findViewById<CheckBox>(R.id.checkBox8)!!
+
         val price = view.findViewById<TextView>(R.id.txtPriceMenuDialog)!!
         val save = view.findViewById<TextView>(R.id.btnSaveMenuDialog)!!
 
@@ -81,39 +108,96 @@ class DrinkFragment : Fragment() {
 
         // Fragment Functions
         // check_checkBox(cbx1, cbx2,cbx3,cbx4,cbx5, cbx6, cbx7,cbx8)
-
-    }
-
-
-    private fun getOfBBDD(ide:String): Organization{
-        lateinit var organization: Organization
-        db.collection("organizations").document(ide).get().addOnSuccessListener {
-            organization.orgName = it.get("orgName") as String
-            organization.orgCif = it.get("orgCif") as String
-            organization.orgFoodList = it.get("orgFoodList") as ArrayList<MenuItem>
-            organization.orgDrinkList = it.get("orgDrinkList") as ArrayList<MenuItem>
-            organization.orgFirstInit = it.get("orgFirstInit") as Boolean
+        save.setOnClickListener {
+            var menuItem = MenuItem(name.text.toString(), description.text.toString(), price.text.toString().toFloat(),check_checkBox(view),"" )
+            getOfBBDD(prefs.getCorreo(), menuItem)
+            dialog.onBackPressed()
         }
-        return organization
+
+
+
     }
 
 
+    private fun getOfBBDD(id:String, menuItem: MenuItem){
 
-    fun check_checkBox(cbx1:CheckBox, cbx2:CheckBox,cbx3:CheckBox,cbx4:CheckBox,cbx5:CheckBox,
-    cbx6:CheckBox, cbx7:CheckBox,cbx8:CheckBox): ArrayList<Int>{
-        var alergensList: ArrayList<Int> = arrayListOf()
 
-        if (cbx1.isChecked) {alergensList.add(1)}
-        if (cbx2.isChecked) {alergensList.add(2)}
-        if (cbx3.isChecked) {alergensList.add(3)}
-        if (cbx4.isChecked) {alergensList.add(4)}
-        if (cbx5.isChecked) {alergensList.add(5)}
-        if (cbx6.isChecked) {alergensList.add(6)}
-        if (cbx7.isChecked) {alergensList.add(7)}
-        if (cbx8.isChecked) {alergensList.add(8)}
+        db.collection("organizations").document(id).get().addOnSuccessListener {
+            var organization =
+                Organization(it.get("orgName") as String,
+                it.get("orgCif") as String,
+                it.get("orgFoodList") as ArrayList<MenuItem>,
+                it.get("orgDrinkList") as ArrayList<MenuItem>,
+                it.get("orgFirstInit") as Boolean)
 
-        return alergensList
+            organization.orgDrinkList.add(menuItem) //<- guardamos el nuevo item
+            saveOnBBDD(organization)
 
+        }
+
+    }
+
+    private fun saveOnBBDD(organization: Organization){
+        db.collection("organizations").document(prefs.getCorreo()).set(
+            hashMapOf(
+                "orgName" to organization.orgName,
+                "orgCif" to organization.orgCif,
+                "orgFoodList" to organization.orgFoodList,
+                "orgDrinkList" to organization.orgDrinkList,
+                "orgFirstInit" to organization.orgFirstInit
+            )
+        )
+    }
+
+    fun check_checkBox(view: View): ArrayList<Int>{
+        val cbx1 = view.findViewById<CheckBox>(R.id.checkBox1)!!
+        val cbx2 = view.findViewById<CheckBox>(R.id.checkBox2)!!
+        val cbx3 = view.findViewById<CheckBox>(R.id.checkBox3)!!
+        val cbx4 = view.findViewById<CheckBox>(R.id.checkBox4)!!
+        val cbx5 = view.findViewById<CheckBox>(R.id.checkBox5)!!
+        val cbx6 = view.findViewById<CheckBox>(R.id.checkBox6)!!
+        val cbx7 = view.findViewById<CheckBox>(R.id.checkBox7)!!
+        val cbx8 = view.findViewById<CheckBox>(R.id.checkBox8)!!
+        var allergensList: ArrayList<Int> = arrayListOf()
+
+        if (cbx1.isChecked) {allergensList.add(1)}
+        if (cbx2.isChecked) {allergensList.add(2)}
+        if (cbx3.isChecked) {allergensList.add(3)}
+        if (cbx4.isChecked) {allergensList.add(4)}
+        if (cbx5.isChecked) {allergensList.add(5)}
+        if (cbx6.isChecked) {allergensList.add(6)}
+        if (cbx7.isChecked) {allergensList.add(7)}
+        if (cbx8.isChecked) {allergensList.add(8)}
+
+        return allergensList
+
+    }
+
+    /*
+     * FUNCIONES COMPLEMENTARIAS A LA CORRUTINA
+     * ENCARGADAS DE ACCEDER A FIREBASE Y
+     * RECUPERAR LA INFORMACION
+     */
+    suspend fun getDataFromFireStore()  : QuerySnapshot? {
+        return try{
+            val data = db.collection("organizations")
+                .whereEqualTo(FieldPath.documentId(), prefs.getCorreo())
+                .get()
+                .await()
+            data
+        }catch (e : Exception){
+            null
+        }
+    }
+
+    private fun obtenerDatos(datos: QuerySnapshot?) {
+        for(dc: DocumentChange in datos?.documentChanges!!){
+            if (dc.type == DocumentChange.Type.ADDED){
+
+                var array = dc.document.get("hora") as ArrayList<MenuItem>
+                arrayDrinkListOrg = array
+            }
+        }
     }
 
     companion object {

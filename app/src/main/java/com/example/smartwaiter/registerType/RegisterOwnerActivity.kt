@@ -8,6 +8,7 @@ import android.widget.EditText
 import android.widget.Toast
 import com.example.smartwaiter.MainActivity
 import com.example.smartwaiter.R
+import com.example.smartwaiter.inteface.MenuItem
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
@@ -47,12 +48,14 @@ class RegisterOwnerActivity : AppCompatActivity() {
     }
 
     private fun saveInBBDD(name:String, email:String, cif:String){
+        var orgFoodList: ArrayList<MenuItem> = arrayListOf()
+        var orgDrinkList: ArrayList<MenuItem> = arrayListOf()
         db.collection("organizations").document(email).set(
             hashMapOf(
                 "orgName" to name,
                 "orgCif" to cif,
-                "orgFoodList" to arrayListOf(""),
-                "orgDrinkList" to arrayListOf(""),
+                "orgFoodList" to orgFoodList,
+                "orgDrinkList" to orgDrinkList,
                 "orgFirstInit" to true
                 )
         )

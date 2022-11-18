@@ -9,12 +9,13 @@ import android.widget.Switch
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.smartwaiter.R
+import com.example.smartwaiter.inteface.MenuItem
 
 class AdapterMenuOrgRV : RecyclerView.Adapter<AdapterMenuOrgRV.ViewHolder>(){
-    var itemMenuList: ArrayList<Menu> = ArrayList()
+    var itemMenuList: ArrayList<MenuItem> = ArrayList()
     lateinit var context: Context
 
-    fun AdapterMenuOrgRV(itemMenuList: ArrayList<Menu>, context: Context) {
+    fun AdapterMenuOrgRV(itemMenuList: ArrayList<MenuItem>, context: Context) {
         this.itemMenuList = itemMenuList
         this.context = context
     }
@@ -36,7 +37,7 @@ class AdapterMenuOrgRV : RecyclerView.Adapter<AdapterMenuOrgRV.ViewHolder>(){
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
-        fun bind(itemMenu: Menu, context: Context, adapter: AdapterMenuOrgRV, correo: ArrayList<Menu>) {
+        fun bind(itemMenu: MenuItem, context: Context, adapter: AdapterMenuOrgRV, correo: ArrayList<MenuItem>) {
 
 
             itemView.setOnClickListener(View.OnClickListener {

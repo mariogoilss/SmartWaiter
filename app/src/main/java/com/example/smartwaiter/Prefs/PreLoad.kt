@@ -1,0 +1,14 @@
+package com.example.smartwaiter.Prefs
+
+import android.app.Application
+
+class PreLoad : Application() {
+    companion object{
+        lateinit var prefs: Prefs
+    }
+
+    override fun onCreate() {
+        super.onCreate()
+        prefs = Prefs(applicationContext)
+    }
+}
