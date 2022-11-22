@@ -3,6 +3,7 @@ package com.example.smartwaiter.menu
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
+import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
@@ -17,16 +18,7 @@ import com.example.smartwaiter.R
 import com.example.smartwaiter.adapters.AdapterMenuOrgRV
 import com.example.smartwaiter.inteface.MenuItem
 import com.example.smartwaiter.inteface.Organization
-import com.google.firebase.firestore.DocumentChange
-import com.google.firebase.firestore.FieldPath
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.QuerySnapshot
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.tasks.await
-import java.lang.Exception
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -39,8 +31,8 @@ private const val ARG_PARAM2 = "param2"
  * RECYCLERVIEW @MiApadatorRVeven
  */
 lateinit var recyclerViewDrinkListOrg: RecyclerView
-var arrayDrinkListOrg:ArrayList<MenuItem> = ArrayList()
 val adapterMenuOrgRV : AdapterMenuOrgRV = AdapterMenuOrgRV()
+var arrayDrinkListOrg = ArrayList<MenuItem>()//<-- Declaramos el arrayList a devolver
 
 /**
  * A simple [Fragment] subclass.
@@ -69,24 +61,53 @@ class DrinkFragment : Fragment() {
         var view = inflater.inflate(R.layout.fragment_drink, container, false)
         var addDrink = view.findViewById<ImageButton>(R.id.btnAddDrink)
 
-        runBlocking {
-            val job : Job = launch(context = Dispatchers.Default) {
-                val datos : QuerySnapshot = getDataFromFireStore() as QuerySnapshot
-                obtenerDatos(datos as QuerySnapshot?)
-            }
-            job.join()
-        }
-        recyclerViewDrinkListOrg = view.findViewById<RecyclerView>(R.id.rvMenuDrinkOrg)
-        recyclerViewDrinkListOrg.setHasFixedSize(true)
-        recyclerViewDrinkListOrg.layoutManager = LinearLayoutManager(context!!)
-        adapterMenuOrgRV.AdapterMenuOrgRV(arrayDrinkListOrg, context!!)
-        recyclerViewDrinkListOrg.adapter = adapterMenuOrgRV
-
         addDrink.setOnClickListener {
-            Toast.makeText(context, "si", Toast.LENGTH_SHORT).show()
             loadDrinkFragment()
         }
+
+        if (arrayDrinkListOrg.isEmpty()){
+            load(view)
+        }else{
+            recyclerViewDrinkListOrg = view.findViewById<RecyclerView>(R.id.rvMenuDrinkOrg)
+            recyclerViewDrinkListOrg.setHasFixedSize(true)
+            recyclerViewDrinkListOrg.layoutManager = LinearLayoutManager(context!!)
+            adapterMenuOrgRV.AdapterMenuOrgRV(arrayDrinkListOrg, context!!)
+            recyclerViewDrinkListOrg.adapter = adapterMenuOrgRV
+        }
+
         return view
+    }
+
+    private fun load(view: View){
+        db.collection("organizations").document(prefs.getCorreo()).get().addOnSuccessListener {
+
+            var arrayToHash = ArrayList<MenuItem>()
+            arrayToHash = it.get("orgDrinkList") as ArrayList<MenuItem> //<-- Pillamos tabla hash BBDD
+
+
+
+            for(i in 0 until arrayToHash.size){
+                val x=arrayToHash[i] as HashMap<String, String>
+
+                var menuItem = MenuItem(
+                    x.getValue("name"),
+                    x.getValue("description"),
+                    x.getValue("price") as Double ,
+                    x.getValue("allergens") as  ArrayList<Int>,
+                    x.getValue("image"))
+
+                arrayDrinkListOrg.add(menuItem)
+            }
+
+            recyclerViewDrinkListOrg = view.findViewById<RecyclerView>(R.id.rvMenuDrinkOrg)
+            recyclerViewDrinkListOrg.setHasFixedSize(true)
+            recyclerViewDrinkListOrg.layoutManager = LinearLayoutManager(context!!)
+            adapterMenuOrgRV.AdapterMenuOrgRV(arrayDrinkListOrg, context!!)
+            recyclerViewDrinkListOrg.adapter = adapterMenuOrgRV
+
+
+        }
+
     }
 
     private fun loadDrinkFragment(){
@@ -109,8 +130,10 @@ class DrinkFragment : Fragment() {
         // Fragment Functions
         // check_checkBox(cbx1, cbx2,cbx3,cbx4,cbx5, cbx6, cbx7,cbx8)
         save.setOnClickListener {
-            var menuItem = MenuItem(name.text.toString(), description.text.toString(), price.text.toString().toFloat(),check_checkBox(view),"" )
+            var menuItem = MenuItem(name.text.toString(), description.text.toString(), price.text.toString().toDouble(),check_checkBox(view),"" )
             getOfBBDD(prefs.getCorreo(), menuItem)
+
+
             dialog.onBackPressed()
         }
 
@@ -131,6 +154,12 @@ class DrinkFragment : Fragment() {
                 it.get("orgFirstInit") as Boolean)
 
             organization.orgDrinkList.add(menuItem) //<- guardamos el nuevo item
+
+            arrayDrinkListOrg.add(menuItem)
+            adapterMenuOrgRV.notifyItemInserted(arrayDrinkListOrg.size)
+            adapterMenuOrgRV.notifyItemRangeChanged(arrayDrinkListOrg.size,arrayDrinkListOrg.size)
+
+
             saveOnBBDD(organization)
 
         }
@@ -173,32 +202,6 @@ class DrinkFragment : Fragment() {
 
     }
 
-    /*
-     * FUNCIONES COMPLEMENTARIAS A LA CORRUTINA
-     * ENCARGADAS DE ACCEDER A FIREBASE Y
-     * RECUPERAR LA INFORMACION
-     */
-    suspend fun getDataFromFireStore()  : QuerySnapshot? {
-        return try{
-            val data = db.collection("organizations")
-                .whereEqualTo(FieldPath.documentId(), prefs.getCorreo())
-                .get()
-                .await()
-            data
-        }catch (e : Exception){
-            null
-        }
-    }
-
-    private fun obtenerDatos(datos: QuerySnapshot?) {
-        for(dc: DocumentChange in datos?.documentChanges!!){
-            if (dc.type == DocumentChange.Type.ADDED){
-
-                var array = dc.document.get("hora") as ArrayList<MenuItem>
-                arrayDrinkListOrg = array
-            }
-        }
-    }
 
     companion object {
         /**
