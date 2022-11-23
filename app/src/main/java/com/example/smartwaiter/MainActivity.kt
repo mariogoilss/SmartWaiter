@@ -27,7 +27,6 @@ class MainActivity : AppCompatActivity() {
         supportActionBar?.hide()
         super.onCreate(savedInstanceState)
 
-
         if (prefs.getRecor()) { //<-- Si tiene todos los datos guardados entra directamente
             memoryEntry()
 

@@ -7,7 +7,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="0dp"
-        android:layout_height="520dp"
+        android:layout_height="590dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
@@ -53,8 +53,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.049"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.556" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <EditText
             android:id="@+id/txtDescMenuDialog"
@@ -80,11 +79,11 @@
             app:layout_constraintHorizontal_bias="0.044"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.858" />
+            app:layout_constraintVertical_bias="0.784" />
 
         <EditText
             android:id="@+id/txtPriceMenuDialog"
-            android:layout_width="100dp"
+            android:layout_width="120dp"
             android:layout_height="wrap_content"
             android:ems="10"
             android:inputType="numberDecimal"
@@ -108,13 +107,14 @@
 
         <Button
             android:id="@+id/btnSaveMenuDialog"
-            android:layout_width="180dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="28dp"
-            android:layout_marginTop="444dp"
+            android:layout_width="153dp"
+            android:layout_height="53dp"
+            android:layout_marginTop="8dp"
             android:text="gUARDAR"
-            app:layout_constraintStart_toEndOf="@+id/txtPriceMenuDialog"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.406"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txtPriceMenuDialog" />
 
         <ImageView
             android:id="@+id/imageView15"
@@ -277,6 +277,31 @@
 
             </LinearLayout>
         </RadioGroup>
+
+        <EditText
+            android:id="@+id/txtAmountMenuDialog"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="68dp"
+            android:layout_marginTop="468dp"
+            android:ems="10"
+            android:inputType="number"
+            app:layout_constraintStart_toEndOf="@+id/txtPriceMenuDialog"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/textView13"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="428dp"
+            android:text="Cantidad:"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toTopOf="@+id/txtAmountMenuDialog"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.567"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="1.0" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

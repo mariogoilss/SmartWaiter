@@ -2,7 +2,6 @@ package com.example.smartwaiter.adapters
 
 import android.content.Context
 import android.view.LayoutInflater
-import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
@@ -10,10 +9,9 @@ import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
 import com.example.smartwaiter.Prefs.PreLoad
 import com.example.smartwaiter.R
-import com.example.smartwaiter.inteface.MenuItem
-import com.example.smartwaiter.inteface.Organization
-import com.example.smartwaiter.menu.adapterMenuOrgRV
+import com.example.smartwaiter.inteface.*
 import com.example.smartwaiter.menu.arrayDrinkListOrg
+import com.example.smartwaiter.menu.arrayFoodListOrg
 import com.google.firebase.firestore.FirebaseFirestore
 
 
@@ -23,15 +21,17 @@ class AdapterMenuOrgRV : RecyclerView.Adapter<AdapterMenuOrgRV.ViewHolder>(){
 
     var itemMenuList: ArrayList<MenuItem> = ArrayList()
     lateinit var context: Context
+    var foodOrDrink: Boolean = false
 
-    fun AdapterMenuOrgRV(itemMenuList: ArrayList<MenuItem>, context: Context) {
+    fun AdapterMenuOrgRV(itemMenuList: ArrayList<MenuItem>, context: Context, foodOrDrink:Boolean) {
         this.itemMenuList = itemMenuList
         this.context = context
+        this.foodOrDrink = foodOrDrink
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = itemMenuList.get(position)
-        holder.bind(item, context, this, position)
+        holder.bind(item, context, this, position, foodOrDrink)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -50,19 +50,19 @@ class AdapterMenuOrgRV : RecyclerView.Adapter<AdapterMenuOrgRV.ViewHolder>(){
         var image = view.findViewById(R.id.imgMenuCard) as ImageView
         var price = view.findViewById(R.id.txtPriceMenuCard) as TextView
 
-        fun bind(itemMenu: MenuItem, context: Context, adapter: AdapterMenuOrgRV, pos: Int) {
+        fun bind(itemMenu: MenuItem, context: Context, adapter: AdapterMenuOrgRV, pos: Int, foodOrDrink: Boolean) {
 
             name.text = itemMenu.name
-            image = findImage(image, itemMenu)
+            image = findImage(image, itemMenu, foodOrDrink)
             price.text = itemMenu.price.toString() + "€"
 
             itemView.setOnClickListener(View.OnClickListener {
-                loadDrinkFragment(context, pos, itemMenu, adapter)
+                loadDrinkFragment(context, pos, itemMenu, adapter,foodOrDrink)
             })
 
         }
 
-        private fun loadDrinkFragment(context: Context, pos: Int, itemMenu: MenuItem, adapter: AdapterMenuOrgRV){
+        private fun loadDrinkFragment(context: Context, pos: Int, itemMenu: MenuItem, adapter: AdapterMenuOrgRV, foodOrDrink:Boolean){
             val builder = AlertDialog.Builder(context)
 
             val layoutInflater = LayoutInflater.from(context)
@@ -73,11 +73,13 @@ class AdapterMenuOrgRV : RecyclerView.Adapter<AdapterMenuOrgRV.ViewHolder>(){
             val description = view.findViewById<TextView>(R.id.txtDescMenuDialog)!!
             val price = view.findViewById<TextView>(R.id.txtPriceMenuDialog)!!
             val save = view.findViewById<TextView>(R.id.btnSaveMenuDialog)!!
+            val amount = view.findViewById<TextView>(R.id.txtAmountMenuDialog)!!
 
             // Se rellenan los campos del Fragment
             name.text = itemMenu.name
             description.text = itemMenu.description
             price.text = itemMenu.price.toString()
+            amount.text = itemMenu.amountStock.toString()
             check_load(view,itemMenu.allergens as ArrayList<Int>)
 
             // Fragment Show
@@ -87,8 +89,8 @@ class AdapterMenuOrgRV : RecyclerView.Adapter<AdapterMenuOrgRV.ViewHolder>(){
 
             // Fragment Functions
             save.setOnClickListener {
-                var menuItem = MenuItem(name.text.toString(), description.text.toString(), price.text.toString().toDouble(),check_checkBox(view),"" )
-                getOfBBDD(PreLoad.prefs.getCorreo(), menuItem,pos, adapter)
+                var menuItem = MenuItem(name.text.toString(), description.text.toString(), price.text.toString().toDouble(),check_checkBox(view),"", amount.text.toString().toInt() )
+                getOfBBDD(PreLoad.prefs.getCorreo(), menuItem,pos, adapter, foodOrDrink)
                 dialog.onBackPressed()
             }
         }
@@ -142,18 +144,39 @@ class AdapterMenuOrgRV : RecyclerView.Adapter<AdapterMenuOrgRV.ViewHolder>(){
 
         }
 
-        private fun getOfBBDD(id:String, menuItem: MenuItem, pos:Int, adapter: AdapterMenuOrgRV){
+        private fun getOfBBDD(
+            id: String,
+            menuItem: MenuItem,
+            pos: Int,
+            adapter: AdapterMenuOrgRV,
+            foodOrDrink: Boolean
+        ){
             db.collection("organizations").document(id).get().addOnSuccessListener {
+
+                var arrayToHash = it.get("orgBankAccount") as HashMap<String, String> //<-- Pillamos tabla hash BBDD
+                var bankAccount = BankAccount(
+                    arrayToHash.getValue("account"),
+                    arrayToHash.getValue("expirationDate"),
+                    arrayToHash.getValue("secretNumber")
+                )
+
                 var organization =
                     Organization(it.get("orgName") as String,
                         it.get("orgCif") as String,
                         it.get("orgFoodList") as ArrayList<MenuItem>,
                         it.get("orgDrinkList") as ArrayList<MenuItem>,
-                        it.get("orgFirstInit") as Boolean)
+                        it.get("orgOpenOrNot") as Boolean,
+                        it.get("orgSalesList") as ArrayList<SalesList>,
+                        bankAccount)
 
+                if(foodOrDrink){
+                    organization.orgFoodList[pos] = menuItem
+                    arrayFoodListOrg[pos] = menuItem
+                }else{
+                    organization.orgDrinkList[pos] = menuItem
+                    arrayDrinkListOrg[pos] = menuItem
+                }
 
-                organization.orgDrinkList[pos] = menuItem
-                arrayDrinkListOrg[pos] = menuItem
 
                 adapter.notifyItemChanged(pos)
                 saveOnBBDD(organization)
@@ -167,14 +190,20 @@ class AdapterMenuOrgRV : RecyclerView.Adapter<AdapterMenuOrgRV.ViewHolder>(){
                     "orgCif" to organization.orgCif,
                     "orgFoodList" to organization.orgFoodList,
                     "orgDrinkList" to organization.orgDrinkList,
-                    "orgFirstInit" to organization.orgFirstInit
+                    "orgOpenOrNot" to organization.orgOpenOrNot,
+                    "orgSalesList" to organization.orgSalesList,
+                    "orgBankAccount" to organization.orgBankAccount
                 )
             )
         }
 
-        private fun findImage(image:ImageView, itemMenu: MenuItem): ImageView {
+        private fun findImage(image: ImageView, itemMenu: MenuItem, foodOrDrink: Boolean): ImageView {
             if (itemMenu.image == ""){
-                image.setImageResource(R.drawable.refresco);
+                if (foodOrDrink){
+                    image.setImageResource(R.drawable.comida);
+                }else{
+                    image.setImageResource(R.drawable.refresco);
+                }
             }else{
                 // desarrollar recuperar imagen
             }

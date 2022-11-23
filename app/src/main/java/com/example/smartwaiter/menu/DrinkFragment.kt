@@ -16,8 +16,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.smartwaiter.Prefs.PreLoad.Companion.prefs
 import com.example.smartwaiter.R
 import com.example.smartwaiter.adapters.AdapterMenuOrgRV
+import com.example.smartwaiter.inteface.BankAccount
 import com.example.smartwaiter.inteface.MenuItem
 import com.example.smartwaiter.inteface.Organization
+import com.example.smartwaiter.inteface.SalesList
 import com.google.firebase.firestore.FirebaseFirestore
 
 
@@ -30,8 +32,8 @@ private const val ARG_PARAM2 = "param2"
  * DECLARAMOS LA VARIBLES NECESARIAS PARA UTILIZAR
  * RECYCLERVIEW @MiApadatorRVeven
  */
-lateinit var recyclerViewDrinkListOrg: RecyclerView
-val adapterMenuOrgRV : AdapterMenuOrgRV = AdapterMenuOrgRV()
+private lateinit var recyclerViewDrinkListOrg: RecyclerView
+private val adapterMenuOrgRV: AdapterMenuOrgRV = AdapterMenuOrgRV()
 var arrayDrinkListOrg = ArrayList<MenuItem>()//<-- Declaramos el arrayList a devolver
 
 /**
@@ -65,36 +67,37 @@ class DrinkFragment : Fragment() {
             loadDrinkFragment()
         }
 
-        if (arrayDrinkListOrg.isEmpty()){
+        if (arrayDrinkListOrg.isEmpty()) {
             load(view)
-        }else{
+        } else {
             recyclerViewDrinkListOrg = view.findViewById<RecyclerView>(R.id.rvMenuDrinkOrg)
             recyclerViewDrinkListOrg.setHasFixedSize(true)
             recyclerViewDrinkListOrg.layoutManager = LinearLayoutManager(context!!)
-            adapterMenuOrgRV.AdapterMenuOrgRV(arrayDrinkListOrg, context!!)
+            adapterMenuOrgRV.AdapterMenuOrgRV(arrayDrinkListOrg, context!!, false)
             recyclerViewDrinkListOrg.adapter = adapterMenuOrgRV
         }
-
         return view
     }
 
-    private fun load(view: View){
+    private fun load(view: View) {
         db.collection("organizations").document(prefs.getCorreo()).get().addOnSuccessListener {
 
             var arrayToHash = ArrayList<MenuItem>()
-            arrayToHash = it.get("orgDrinkList") as ArrayList<MenuItem> //<-- Pillamos tabla hash BBDD
+            arrayToHash =
+                it.get("orgDrinkList") as ArrayList<MenuItem> //<-- Pillamos tabla hash BBDD
 
 
-
-            for(i in 0 until arrayToHash.size){
-                val x=arrayToHash[i] as HashMap<String, String>
+            for (i in 0 until arrayToHash.size) {
+                val x = arrayToHash[i] as HashMap<String, String>
 
                 var menuItem = MenuItem(
                     x.getValue("name"),
                     x.getValue("description"),
-                    x.getValue("price") as Double ,
-                    x.getValue("allergens") as  ArrayList<Int>,
-                    x.getValue("image"))
+                    x.getValue("price") as Double,
+                    x.getValue("allergens") as ArrayList<Int>,
+                    x.getValue("image"),
+                    (x.getValue("amountStock") as Long).toInt()
+                )
 
                 arrayDrinkListOrg.add(menuItem)
             }
@@ -102,7 +105,7 @@ class DrinkFragment : Fragment() {
             recyclerViewDrinkListOrg = view.findViewById<RecyclerView>(R.id.rvMenuDrinkOrg)
             recyclerViewDrinkListOrg.setHasFixedSize(true)
             recyclerViewDrinkListOrg.layoutManager = LinearLayoutManager(context!!)
-            adapterMenuOrgRV.AdapterMenuOrgRV(arrayDrinkListOrg, context!!)
+            adapterMenuOrgRV.AdapterMenuOrgRV(arrayDrinkListOrg, context!!, false)
             recyclerViewDrinkListOrg.adapter = adapterMenuOrgRV
 
 
@@ -110,15 +113,15 @@ class DrinkFragment : Fragment() {
 
     }
 
-    private fun loadDrinkFragment(){
+    private fun loadDrinkFragment() {
         val builder = AlertDialog.Builder(context!!)
-        val view = layoutInflater.inflate(R.layout.dialog_menu_item_add,null)
+        val view = layoutInflater.inflate(R.layout.dialog_menu_item_add, null)
 
 
         // Fragments Elements
         val name = view.findViewById<TextView>(R.id.txtNameMenuDialog)!!
         val description = view.findViewById<TextView>(R.id.txtDescMenuDialog)!!
-
+        val amount = view.findViewById<TextView>(R.id.txtAmountMenuDialog)!!
         val price = view.findViewById<TextView>(R.id.txtPriceMenuDialog)!!
         val save = view.findViewById<TextView>(R.id.btnSaveMenuDialog)!!
 
@@ -130,34 +133,51 @@ class DrinkFragment : Fragment() {
         // Fragment Functions
         // check_checkBox(cbx1, cbx2,cbx3,cbx4,cbx5, cbx6, cbx7,cbx8)
         save.setOnClickListener {
-            var menuItem = MenuItem(name.text.toString(), description.text.toString(), price.text.toString().toDouble(),check_checkBox(view),"" )
+            var menuItem = MenuItem(
+                name.text.toString(),
+                description.text.toString(),
+                price.text.toString().toDouble(),
+                check_checkBox(view),
+                "",
+                amount.text.toString().toInt()
+            )
             getOfBBDD(prefs.getCorreo(), menuItem)
-
-
             dialog.onBackPressed()
         }
-
 
 
     }
 
 
-    private fun getOfBBDD(id:String, menuItem: MenuItem){
+    private fun getOfBBDD(id: String, menuItem: MenuItem) {
 
 
         db.collection("organizations").document(id).get().addOnSuccessListener {
+
+            var arrayToHash = it.get("orgBankAccount") as HashMap<String, String> //<-- Pillamos tabla hash BBDD
+            var bankAccount = BankAccount(
+                arrayToHash.getValue("account"),
+                arrayToHash.getValue("expirationDate"),
+                arrayToHash.getValue("secretNumber")
+            )
+
             var organization =
-                Organization(it.get("orgName") as String,
-                it.get("orgCif") as String,
-                it.get("orgFoodList") as ArrayList<MenuItem>,
-                it.get("orgDrinkList") as ArrayList<MenuItem>,
-                it.get("orgFirstInit") as Boolean)
+                Organization(
+                    it.get("orgName") as String,
+                    it.get("orgCif") as String,
+                    it.get("orgFoodList") as ArrayList<MenuItem>,
+                    it.get("orgDrinkList") as ArrayList<MenuItem>,
+                    it.get("orgOpenOrNot") as Boolean,
+                    it.get("orgSalesList") as ArrayList<SalesList>,
+                    bankAccount
+
+                )
 
             organization.orgDrinkList.add(menuItem) //<- guardamos el nuevo item
 
             arrayDrinkListOrg.add(menuItem)
             adapterMenuOrgRV.notifyItemInserted(arrayDrinkListOrg.size)
-            adapterMenuOrgRV.notifyItemRangeChanged(arrayDrinkListOrg.size,arrayDrinkListOrg.size)
+            adapterMenuOrgRV.notifyItemRangeChanged(arrayDrinkListOrg.size, arrayDrinkListOrg.size)
 
 
             saveOnBBDD(organization)
@@ -166,19 +186,21 @@ class DrinkFragment : Fragment() {
 
     }
 
-    private fun saveOnBBDD(organization: Organization){
+    private fun saveOnBBDD(organization: Organization) {
         db.collection("organizations").document(prefs.getCorreo()).set(
             hashMapOf(
                 "orgName" to organization.orgName,
                 "orgCif" to organization.orgCif,
                 "orgFoodList" to organization.orgFoodList,
                 "orgDrinkList" to organization.orgDrinkList,
-                "orgFirstInit" to organization.orgFirstInit
+                "orgOpenOrNot" to organization.orgOpenOrNot,
+                "orgSalesList" to organization.orgSalesList,
+                "orgBankAccount" to organization.orgBankAccount
             )
         )
     }
 
-    fun check_checkBox(view: View): ArrayList<Int>{
+    fun check_checkBox(view: View): ArrayList<Int> {
         val cbx1 = view.findViewById<CheckBox>(R.id.checkBox1)!!
         val cbx2 = view.findViewById<CheckBox>(R.id.checkBox2)!!
         val cbx3 = view.findViewById<CheckBox>(R.id.checkBox3)!!
@@ -189,14 +211,30 @@ class DrinkFragment : Fragment() {
         val cbx8 = view.findViewById<CheckBox>(R.id.checkBox8)!!
         var allergensList: ArrayList<Int> = arrayListOf()
 
-        if (cbx1.isChecked) {allergensList.add(1)}
-        if (cbx2.isChecked) {allergensList.add(2)}
-        if (cbx3.isChecked) {allergensList.add(3)}
-        if (cbx4.isChecked) {allergensList.add(4)}
-        if (cbx5.isChecked) {allergensList.add(5)}
-        if (cbx6.isChecked) {allergensList.add(6)}
-        if (cbx7.isChecked) {allergensList.add(7)}
-        if (cbx8.isChecked) {allergensList.add(8)}
+        if (cbx1.isChecked) {
+            allergensList.add(1)
+        }
+        if (cbx2.isChecked) {
+            allergensList.add(2)
+        }
+        if (cbx3.isChecked) {
+            allergensList.add(3)
+        }
+        if (cbx4.isChecked) {
+            allergensList.add(4)
+        }
+        if (cbx5.isChecked) {
+            allergensList.add(5)
+        }
+        if (cbx6.isChecked) {
+            allergensList.add(6)
+        }
+        if (cbx7.isChecked) {
+            allergensList.add(7)
+        }
+        if (cbx8.isChecked) {
+            allergensList.add(8)
+        }
 
         return allergensList
 
