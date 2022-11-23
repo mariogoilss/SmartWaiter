@@ -8,6 +8,10 @@ import android.widget.EditText
 import android.widget.Toast
 import com.example.smartwaiter.MainActivity
 import com.example.smartwaiter.R
+import com.example.smartwaiter.inteface.BankAccount
+import com.example.smartwaiter.inteface.MenuItem
+import com.example.smartwaiter.inteface.SaleItem
+import com.example.smartwaiter.inteface.SalesList
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
@@ -47,11 +51,16 @@ class RegisterOwnerActivity : AppCompatActivity() {
     }
 
     private fun saveInBBDD(name:String, email:String, cif:String){
+
         db.collection("organizations").document(email).set(
             hashMapOf(
                 "orgName" to name,
                 "orgCif" to cif,
-                "orgFirstInit" to true
+                "orgFoodList" to arrayListOf<MenuItem>(),
+                "orgDrinkList" to arrayListOf<MenuItem>(),
+                "orgOpenOrNot" to false,
+                "orgSalesList" to arrayListOf<SalesList>(),
+                "orgBankAccount" to BankAccount("123456789","21/7","123"),
                 )
         )
     }

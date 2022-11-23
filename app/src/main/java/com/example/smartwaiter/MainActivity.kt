@@ -9,22 +9,12 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.example.smartwaiter.organizationBranch.MainOrganization
+import com.example.smartwaiter.Prefs.PreLoad.Companion.prefs
 import com.example.smartwaiter.organizationBranch.MainOrganizationNav
 import com.example.smartwaiter.registerType.RegisterClientActivity
 import com.example.smartwaiter.registerType.RegisterOwnerActivity
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.QuerySnapshot
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.tasks.await
-import java.lang.Exception
 
 
 private var GOOGLE_SIGN_IN = 1
@@ -34,34 +24,59 @@ class MainActivity : AppCompatActivity() {
     private val db = FirebaseFirestore.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
         supportActionBar?.hide()
+        super.onCreate(savedInstanceState)
 
-        val register = findViewById<TextView>(R.id.txtRegister)!!
-        val login = findViewById<Button>(R.id.btnLogin)
-        val email = findViewById<EditText>(R.id.txtLogEmail)
-        val password = findViewById<EditText>(R.id.txtLogPwd)
-        val remember = findViewById<CheckBox>(R.id.cbxRemember)
+        if (prefs.getRecor()) { //<-- Si tiene todos los datos guardados entra directamente
+            memoryEntry()
 
-        register.setOnClickListener {
-            loadForm()
-        }
+        }else{
+            setContentView(R.layout.activity_main)
+            val register = findViewById<TextView>(R.id.txtRegister)!!
+            val login = findViewById<Button>(R.id.btnLogin)
+            val email = findViewById<EditText>(R.id.txtLogEmail)
+            val password = findViewById<EditText>(R.id.txtLogPwd)
+            val remember = findViewById<CheckBox>(R.id.cbxRemember)
 
-        login.setOnClickListener {
-            if (email.text.isNotEmpty() && password.text.isNotEmpty()) {
+            register.setOnClickListener {
+                loadForm()
+            }
 
-                FirebaseAuth.getInstance().signInWithEmailAndPassword(email.text.toString(), password.text.toString()).addOnCompleteListener {
-                    if (it.isSuccessful) {
-                        mainEntry(email.text.toString())
-                    }else{
-                        Toast.makeText(this, "Usuario o contraseña incorrecto", Toast.LENGTH_SHORT).show()
+            login.setOnClickListener {
+                if (email.text.isNotEmpty() && password.text.isNotEmpty()) {
+
+                    FirebaseAuth.getInstance().signInWithEmailAndPassword(email.text.toString(), password.text.toString()).addOnCompleteListener {
+                        if (it.isSuccessful) {
+                            saveInMemory(email.text.toString(), remember)
+                            mainEntry(email.text.toString())
+                        }else{
+                            Toast.makeText(this, "Usuario o contraseña incorrecto", Toast.LENGTH_SHORT).show()
+                        }
                     }
                 }
             }
         }
     }
 
+    /*
+     * Control de la memoria
+     * @btnRegister
+     */
+    fun saveInMemory(email:String, remember: CheckBox){
+        prefs.saveCorreo(email)
+        prefs.saveRecordar(remember.isChecked)
+    }
+
+    fun memoryEntry(){
+        db.collection("organizations").document(prefs.getCorreo()).get().addOnSuccessListener {
+            if(it.exists()){
+                val intent = Intent(this, MainOrganizationNav::class.java)
+                startActivity(intent)
+            }else{
+                Toast.makeText(this, "Sin terminar", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
 
     /*
      * Control de la accion de logearse
@@ -72,7 +87,6 @@ class MainActivity : AppCompatActivity() {
             db.collection("organizations").document(email).get().addOnSuccessListener {
                 if(it.exists()){
                     val intent = Intent(this, MainOrganizationNav::class.java)
-                    intent.putExtra("email", email)
                     startActivity(intent)
                 }else{
                     Toast.makeText(this, "Sin terminar", Toast.LENGTH_SHORT).show()
