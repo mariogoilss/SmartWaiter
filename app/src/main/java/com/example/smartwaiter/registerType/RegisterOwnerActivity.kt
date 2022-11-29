@@ -61,6 +61,8 @@ class RegisterOwnerActivity : AppCompatActivity() {
                 "orgOpenOrNot" to false,
                 "orgSalesList" to arrayListOf<SalesList>(),
                 "orgBankAccount" to BankAccount("123456789","21/7","123"),
+                "orgSuggestionsMailBox" to arrayListOf<String>(),
+                "orgTablesList" to arrayListOf<String>()
                 )
         )
     }

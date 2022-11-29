@@ -6,4 +6,6 @@ data class Organization (var orgCif:String,
                          var orgDrinkList:ArrayList<MenuItem>,
                          var orgOpenOrNot:Boolean,
                          var orgSalesList:ArrayList<SalesList>,
-                         var orgBankAccount:BankAccount)
+                         var orgBankAccount:BankAccount,
+                         var orgSuggestionsMailBox:ArrayList<String>,
+                         var orgTablesList:ArrayList<String>)

@@ -161,16 +161,15 @@ class DrinkFragment : Fragment() {
             )
 
             var organization =
-                Organization(
-                    it.get("orgName") as String,
+                Organization(it.get("orgName") as String,
                     it.get("orgCif") as String,
                     it.get("orgFoodList") as ArrayList<MenuItem>,
                     it.get("orgDrinkList") as ArrayList<MenuItem>,
                     it.get("orgOpenOrNot") as Boolean,
                     it.get("orgSalesList") as ArrayList<SalesList>,
-                    bankAccount
-
-                )
+                    bankAccount,
+                    it.get("orgSuggestionsMailBox") as ArrayList<String>,
+                    it.get("orgTablesList") as ArrayList<String>)
 
             organization.orgDrinkList.add(menuItem) //<- guardamos el nuevo item
 
@@ -194,7 +193,9 @@ class DrinkFragment : Fragment() {
                 "orgDrinkList" to organization.orgDrinkList,
                 "orgOpenOrNot" to organization.orgOpenOrNot,
                 "orgSalesList" to organization.orgSalesList,
-                "orgBankAccount" to organization.orgBankAccount
+                "orgBankAccount" to organization.orgBankAccount,
+                "orgSuggestionsMailBox" to organization.orgSuggestionsMailBox,
+                "orgTablesList" to organization.orgTablesList
             )
         )
     }
