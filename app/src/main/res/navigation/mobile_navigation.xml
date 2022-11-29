@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
+    android:label="@string/title_menu"
     app:startDestination="@+id/navigation_home">
 
     <fragment
@@ -12,14 +13,14 @@
         tools:layout="@layout/fragment_home" />
 
     <fragment
-        android:id="@+id/navigation_dashboard"
+        android:id="@+id/navigation_menu"
         android:name="com.example.smartwaiter.organizationBranch.ui.menu.MenuFragment"
-        android:label="@string/title_dashboard"
+        android:label="@string/title_menu"
         tools:layout="@layout/fragment_menu" />
 
     <fragment
-        android:id="@+id/navigation_notifications"
-        android:name="com.example.smartwaiter.organizationBranch.ui.notifications.NotificationsFragment"
-        android:label="@string/title_notifications"
-        tools:layout="@layout/fragment_notifications" />
+        android:id="@+id/navigation_management"
+        android:name="com.example.smartwaiter.organizationBranch.ui.management.ManagementFragment"
+        android:label="@string/title_management"
+        tools:layout="@layout/fragment_management" />
 </navigation>

@@ -167,7 +167,9 @@ class AdapterMenuOrgRV : RecyclerView.Adapter<AdapterMenuOrgRV.ViewHolder>(){
                         it.get("orgDrinkList") as ArrayList<MenuItem>,
                         it.get("orgOpenOrNot") as Boolean,
                         it.get("orgSalesList") as ArrayList<SalesList>,
-                        bankAccount)
+                        bankAccount,
+                        it.get("orgSuggestionsMailBox") as ArrayList<String>,
+                        it.get("orgTablesList") as ArrayList<String>)
 
                 if(foodOrDrink){
                     organization.orgFoodList[pos] = menuItem
@@ -192,7 +194,9 @@ class AdapterMenuOrgRV : RecyclerView.Adapter<AdapterMenuOrgRV.ViewHolder>(){
                     "orgDrinkList" to organization.orgDrinkList,
                     "orgOpenOrNot" to organization.orgOpenOrNot,
                     "orgSalesList" to organization.orgSalesList,
-                    "orgBankAccount" to organization.orgBankAccount
+                    "orgBankAccount" to organization.orgBankAccount,
+                    "orgSuggestionsMailBox" to organization.orgSuggestionsMailBox,
+                    "orgTablesList" to organization.orgTablesList
                 )
             )
         }
