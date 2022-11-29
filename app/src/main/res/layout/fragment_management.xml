@@ -72,7 +72,7 @@
         app:layout_constraintTop_toBottomOf="@+id/imgPrueba">
 
         <TextView
-            android:id="@+id/textView19"
+            android:id="@+id/btnManageTables"
             android:layout_width="match_parent"
             android:layout_height="42dp"
             android:gravity="center|left"
@@ -97,4 +97,5 @@
             android:textSize="18sp" />
 
     </LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

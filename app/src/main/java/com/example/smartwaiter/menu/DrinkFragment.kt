@@ -117,7 +117,6 @@ class DrinkFragment : Fragment() {
         val builder = AlertDialog.Builder(context!!)
         val view = layoutInflater.inflate(R.layout.dialog_menu_item_add, null)
 
-
         // Fragments Elements
         val name = view.findViewById<TextView>(R.id.txtNameMenuDialog)!!
         val description = view.findViewById<TextView>(R.id.txtDescMenuDialog)!!
