@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:name=".Prefs.PreLoad"
@@ -16,6 +16,14 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SmartWaiter"
         tools:targetApi="31">
+        <activity
+            android:name=".MainClientActivity"
+            android:exported="false"
+            android:label="@string/title_activity_main_client">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
         <activity
             android:name=".organizationBranch.ui.tables.TablesActivity"
             android:exported="false">
