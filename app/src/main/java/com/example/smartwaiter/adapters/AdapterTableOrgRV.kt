@@ -104,6 +104,7 @@ class AdapterTableOrgRV : RecyclerView.Adapter<AdapterTableOrgRV.ViewHolder>(){
                 var pdfDocument = PdfDocument()
                 var orgName = TextPaint()
                 var pdfQr = Paint()
+                var orgTable = TextPaint()
 
                 var pageInfo = PdfDocument.PageInfo.Builder(200, 240, 1).create()
                 var page = pdfDocument.startPage(pageInfo)
@@ -132,9 +133,6 @@ class AdapterTableOrgRV : RecyclerView.Adapter<AdapterTableOrgRV.ViewHolder>(){
                     Toast.makeText(context, "Nop", Toast.LENGTH_SHORT).show()
                 }
                 pdfDocument.close()
-
-
-
 
             }
 
