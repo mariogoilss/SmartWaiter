@@ -169,7 +169,7 @@ class AdapterMenuOrgRV : RecyclerView.Adapter<AdapterMenuOrgRV.ViewHolder>(){
                         it.get("orgSalesList") as ArrayList<SalesList>,
                         bankAccount,
                         it.get("orgSuggestionsMailBox") as ArrayList<String>,
-                        it.get("orgTablesList") as ArrayList<String>)
+                        it.get("orgTablesList") as ArrayList<Int>)
 
                 if(foodOrDrink){
                     organization.orgFoodList[pos] = menuItem
