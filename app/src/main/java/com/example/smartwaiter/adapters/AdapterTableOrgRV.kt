@@ -4,11 +4,15 @@ import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
+import android.content.ContextWrapper
 import android.content.DialogInterface
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Paint
+import android.graphics.Typeface
 import android.graphics.pdf.PdfDocument
+import android.os.Environment
 import android.text.TextPaint
 import android.view.LayoutInflater
 import android.view.View
@@ -27,32 +31,36 @@ import com.example.smartwaiter.inteface.BankAccount
 import com.example.smartwaiter.inteface.MenuItem
 import com.example.smartwaiter.inteface.Organization
 import com.example.smartwaiter.inteface.SalesList
+import com.example.smartwaiter.menu.arrayDrinkListOrg
+import com.example.smartwaiter.menu.arrayFoodListOrg
 
 
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.zxing.BarcodeFormat
+import com.journeyapps.barcodescanner.BarcodeEncoder
+import io.grpc.internal.DnsNameResolver.SrvRecord
+import java.io.File
+import java.io.FileOutputStream
 
 private val db = FirebaseFirestore.getInstance()
 class AdapterTableOrgRV : RecyclerView.Adapter<AdapterTableOrgRV.ViewHolder>(){
 
 
     var tableList: ArrayList<Int> = ArrayList()
-    lateinit var tablesActivity: Activity
     lateinit var context: Context
 
 
     fun AdapterTableOrgRV(
         tableList: ArrayList<Int>,
         context: Context,
-        tablesActivity: Activity
     ) {
         this.tableList = tableList
         this.context = context
-        this.tablesActivity = tablesActivity
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = tableList.get(position)
-        holder.bind(item, context, this, position,tablesActivity )
+        holder.bind(item, context, this, position )
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -75,7 +83,6 @@ class AdapterTableOrgRV : RecyclerView.Adapter<AdapterTableOrgRV.ViewHolder>(){
             context: Context,
             adapter: AdapterTableOrgRV,
             pos: Int,
-            tablesActivity: Activity
         ) {
             idTable.text = id.toString()
 
@@ -85,39 +92,57 @@ class AdapterTableOrgRV : RecyclerView.Adapter<AdapterTableOrgRV.ViewHolder>(){
             }
 
             btnPrint.setOnClickListener {
-                printPdf(id, context, tablesActivity)
+                printPdf(id, context)
             }
         }
 
-        private fun printPdf(idTable: Int, context: Context, tablesActivity:Activity){
-            var titulo = "Mesa $idTable"
+        private fun printPdf(idTable: Int, context: Context){
 
-            if (!checkPermission(context)){
-                requestPermissions(tablesActivity)
-            }else{
+
+            db.collection("organizations").document(prefs.getCorreo()).get().addOnSuccessListener {
+
                 var pdfDocument = PdfDocument()
-                var pdfTitle = TextPaint()
+                var orgName = TextPaint()
                 var pdfQr = Paint()
 
-                var pageInfo = PdfDocument.PageInfo.Builder(200, 200, 1).create()
+                var pageInfo = PdfDocument.PageInfo.Builder(200, 240, 1).create()
                 var page = pdfDocument.startPage(pageInfo)
+
+                var canvas = page.canvas
+
+                orgName.textSize = 14f
+                orgName.textAlign = Paint.Align.CENTER
+                canvas.drawText(it.get("orgName") as String, canvas.width/2f, 19f,orgName)
+
+
+                var barEncoder = BarcodeEncoder()
+                var bitmap = barEncoder.encodeBitmap(""+ prefs.getCorreo() + "," + idTable, BarcodeFormat.QR_CODE, 200,200)
+                var bitmapScale = Bitmap.createBitmap(bitmap)
+                canvas.drawBitmap(bitmapScale, 0f, 20f, pdfQr)
+
+
+                pdfDocument.finishPage(page)
+
+                var file = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "picQR$idTable.pdf")
+                try{
+                    pdfDocument.writeTo(FileOutputStream(file))
+                    Toast.makeText(context, "Pdf creado correctamente", Toast.LENGTH_SHORT).show()
+                } catch (e:java.lang.Exception){
+                    e.printStackTrace()
+                    Toast.makeText(context, "Nop", Toast.LENGTH_SHORT).show()
+                }
+                pdfDocument.close()
+
+
 
 
             }
-        }
-        private fun checkPermission(context: Context):Boolean{
-            val permissionWriteExt = ContextCompat.checkSelfPermission(context, WRITE_EXTERNAL_STORAGE)
-            val permissionReadExt = ContextCompat.checkSelfPermission(context, READ_EXTERNAL_STORAGE)
-            return permissionWriteExt == PackageManager.PERMISSION_GRANTED && permissionReadExt == PackageManager.PERMISSION_GRANTED
+
+
+
+
         }
 
-        private fun requestPermissions(tablesActivity: Activity) {
-            ActivityCompat.requestPermissions(
-                tablesActivity,
-                arrayOf(WRITE_EXTERNAL_STORAGE,READ_EXTERNAL_STORAGE),
-                200
-            )
-        }
 
 
         private fun getOfBBDD(pos: Int, adapter:AdapterTableOrgRV) {
