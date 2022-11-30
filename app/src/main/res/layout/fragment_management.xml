@@ -22,7 +22,7 @@
         android:id="@+id/btnMngCloseSession"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="30dp"
         android:text="Cerrar sesion"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -63,39 +63,102 @@
 
     <LinearLayout
         android:id="@+id/linearLayout"
-        android:layout_width="332dp"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imgPrueba">
+        app:layout_constraintTop_toBottomOf="@+id/divider3">
 
-        <TextView
-            android:id="@+id/btnManageTables"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="42dp"
-            android:gravity="center|left"
-            android:text="Gestionar mesas"
-            android:textSize="18sp"
-            app:drawableTintMode="add" />
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/textView20"
-            android:layout_width="match_parent"
-            android:layout_height="42dp"
-            android:gravity="center|left"
-            android:text="Admistrar cuenta"
-            android:textSize="18sp" />
+            <LinearLayout
+                android:layout_width="10dp"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"></LinearLayout>
 
-        <TextView
-            android:id="@+id/textView21"
+            <TextView
+                android:id="@+id/btnManageTables"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:drawableLeft="@android:drawable/presence_invisible"
+                android:gravity="center|left"
+                android:text="  Gestionar mesas"
+                android:textSize="18sp"
+                app:drawableTintMode="add" />
+
+        </LinearLayout>
+
+        <View
+            android:id="@+id/divider4"
             android:layout_width="match_parent"
-            android:layout_height="42dp"
-            android:gravity="center|left"
-            android:text="Buzon de sugerencias"
-            android:textSize="18sp" />
+            android:layout_height="1dp"
+            android:background="?android:attr/listDivider" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="10dp"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"></LinearLayout>
+
+            <TextView
+                android:id="@+id/textView20"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:drawableLeft="@android:drawable/presence_invisible"
+                android:gravity="center|left"
+                android:text="  Admistrar cuenta"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+        <View
+            android:id="@+id/divider5"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="?android:attr/listDivider" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="10dp"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"></LinearLayout>
+
+            <TextView
+                android:id="@+id/textView21"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:drawableLeft="@android:drawable/presence_invisible"
+                android:gravity="center|left"
+                android:text="  Buzon de sugerencias"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+        <View
+            android:id="@+id/divider6"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="?android:attr/listDivider" />
 
     </LinearLayout>
+
+    <View
+        android:id="@+id/divider3"
+        android:layout_width="409dp"
+        android:layout_height="1dp"
+        android:layout_marginTop="20dp"
+        android:background="?android:attr/listDivider"
+        app:layout_constraintTop_toBottomOf="@+id/imgPrueba"
+        tools:layout_editor_absoluteX="1dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

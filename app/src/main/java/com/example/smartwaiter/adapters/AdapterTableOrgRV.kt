@@ -115,6 +115,10 @@ class AdapterTableOrgRV : RecyclerView.Adapter<AdapterTableOrgRV.ViewHolder>(){
                 orgName.textAlign = Paint.Align.CENTER
                 canvas.drawText(it.get("orgName") as String, canvas.width/2f, 19f,orgName)
 
+                orgTable.textSize = 14f
+                orgTable.textAlign = Paint.Align.CENTER
+                canvas.drawText("mesa $idTable", canvas.width/2f, 235f,orgName)
+
 
                 var barEncoder = BarcodeEncoder()
                 var bitmap = barEncoder.encodeBitmap(""+ prefs.getCorreo() + "," + idTable, BarcodeFormat.QR_CODE, 200,200)
