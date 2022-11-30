@@ -25,15 +25,24 @@
             app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
-            android:id="@+id/txtNameTable"
-            android:layout_width="230dp"
+            android:id="@+id/txtIdTable"
+            android:layout_width="50dp"
             android:layout_height="50dp"
             android:gravity="center|left"
-            android:text="TextView"
             android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.088"
+            app:layout_constraintStart_toEndOf="@+id/txtNameTable"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/txtNameTable"
+            android:layout_width="60dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="44dp"
+            android:gravity="center"
+            android:text="Mesa"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -42,17 +51,20 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_marginStart="5dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/btnPrintTable"
-            app:srcCompat="@android:drawable/ic_menu_close_clear_cancel"
-            tools:layout_editor_absoluteY="10dp" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@android:drawable/ic_menu_close_clear_cancel" />
 
         <ImageButton
             android:id="@+id/btnPrintTable"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:layout_marginStart="36dp"
-            app:layout_constraintStart_toEndOf="@+id/txtNameTable"
-            app:srcCompat="?attr/actionModeCopyDrawable"
-            tools:layout_editor_absoluteY="10dp" />
+            android:layout_marginStart="104dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/txtIdTable"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="?attr/actionModeCopyDrawable" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

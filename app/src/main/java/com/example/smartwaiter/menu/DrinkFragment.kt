@@ -169,7 +169,7 @@ class DrinkFragment : Fragment() {
                     it.get("orgSalesList") as ArrayList<SalesList>,
                     bankAccount,
                     it.get("orgSuggestionsMailBox") as ArrayList<String>,
-                    it.get("orgTablesList") as ArrayList<String>)
+                    it.get("orgTablesList") as ArrayList<Int>)
 
             organization.orgDrinkList.add(menuItem) //<- guardamos el nuevo item
 
