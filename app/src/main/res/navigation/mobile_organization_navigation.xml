@@ -2,14 +2,13 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/mobile_navigation"
-    android:label="@string/title_menu"
-    app:startDestination="@+id/navigation_home">
+    android:id="@+id/mobile_organization_navigation"
+    app:startDestination="@+id/navigation_orders">
 
     <fragment
-        android:id="@+id/navigation_home"
+        android:id="@+id/navigation_orders"
         android:name="com.example.smartwaiter.organizationBranch.ui.orders.OrdersFragment"
-        android:label="@string/title_home"
+        android:label="@string/title_orders"
         tools:layout="@layout/fragment_orders" />
 
     <fragment

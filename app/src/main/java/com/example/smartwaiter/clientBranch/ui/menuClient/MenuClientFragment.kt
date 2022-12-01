@@ -1,60 +1,103 @@
 package com.example.smartwaiter.clientBranch.ui.menuClient
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
+import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.FragmentTransaction
+import com.example.smartwaiter.Prefs.PreLoad.Companion.prefs
 import com.example.smartwaiter.R
+import com.example.smartwaiter.clientBranch.MainClientActivityNav
+import com.example.smartwaiter.databinding.FragmentMenuBinding
+import com.example.smartwaiter.menu.DrinkFragment
+import com.example.smartwaiter.menu.FoodFragment
+import com.example.smartwaiter.organizationBranch.MainOrganizationNav
+import com.google.android.material.tabs.TabLayout
+import com.google.firebase.firestore.FirebaseFirestore
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Use the [MenuClientFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class MenuClientFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+    private val db = FirebaseFirestore.getInstance()
+    private var _binding: FragmentMenuBinding? = null
+    private val binding get() = _binding!!
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_menu_client, container, false)
+        _binding = FragmentMenuBinding.inflate(inflater, container, false)
+
+        var tabLayout: TabLayout = binding.tabLayout
+        var frameLayout: FrameLayout = binding.frameLayout
+        val root: View = binding.root
+        var email:String = ""
+        var mesa:Int = 0
+        var checker = false
+
+
+        if (prefs.getOrgId() == "" && prefs.getTable() == 0){ loadCamera(context!!)}
+        if (checker){ initMenu(tabLayout) }
+
+        return root
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment MenuClientFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            MenuClientFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
+    private fun loadCamera(context: Context){
+        val builder = AlertDialog.Builder(context)
+        val view = layoutInflater.inflate(R.layout.dialog_scan_qr,null)
+        builder.setView(view)
+
+        val dialog = builder.create() //<- se crea el dialog
+        dialog.show() //<- se muestra el showdialog
+
+
+
     }
+
+    private fun initMenu(tabLayout: TabLayout){
+        var fragment:Fragment
+        fragment = FoodFragment()
+        var fragmentManager = activity?.supportFragmentManager
+        var fragmentTransaction = fragmentManager!!.beginTransaction()
+        fragmentTransaction!!.replace(R.id.frameLayout, fragment)
+        fragmentTransaction!!.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+        fragmentTransaction!!.commit()
+
+
+        tabLayout!!.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab) {
+                // creating cases for fragment
+                when (tab.position) {
+                    0 -> fragment = FoodFragment()
+                    1 -> fragment = DrinkFragment()
+
+                }
+                val fm = activity?.supportFragmentManager
+                val ft = fm?.beginTransaction()
+                ft?.replace(R.id.frameLayout, fragment)
+                ft?.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                ft?.commit()
+
+            }
+
+            override fun onTabUnselected(tab: TabLayout.Tab) {
+            }
+
+            override fun onTabReselected(tab: TabLayout.Tab) {
+            }
+        })
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
 }

@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDelegate
 import com.example.smartwaiter.Prefs.PreLoad.Companion.prefs
+import com.example.smartwaiter.clientBranch.MainClientActivityNav
 import com.example.smartwaiter.organizationBranch.MainOrganizationNav
 import com.example.smartwaiter.registerType.RegisterClientActivity
 import com.example.smartwaiter.registerType.RegisterOwnerActivity
@@ -68,6 +69,8 @@ class MainActivity : AppCompatActivity() {
     fun saveInMemory(email:String, remember: CheckBox){
         prefs.saveCorreo(email)
         prefs.saveRecordar(remember.isChecked)
+        prefs.saveOrgId("")
+        prefs.saveTable(0)
     }
 
     fun memoryEntry(){
@@ -76,7 +79,9 @@ class MainActivity : AppCompatActivity() {
                 val intent = Intent(this, MainOrganizationNav::class.java)
                 startActivity(intent)
             }else{
-                Toast.makeText(this, "Sin terminar", Toast.LENGTH_SHORT).show()
+                val intent = Intent(this, MainClientActivityNav::class.java)
+                prefs.wipeOrders()
+                startActivity(intent)
             }
         }
     }
@@ -92,7 +97,9 @@ class MainActivity : AppCompatActivity() {
                     val intent = Intent(this, MainOrganizationNav::class.java)
                     startActivity(intent)
                 }else{
-                    Toast.makeText(this, "Sin terminar", Toast.LENGTH_SHORT).show()
+                    val intent = Intent(this, MainClientActivityNav::class.java)
+                    prefs.wipeOrders()
+                    startActivity(intent)
                 }
             }
         }
