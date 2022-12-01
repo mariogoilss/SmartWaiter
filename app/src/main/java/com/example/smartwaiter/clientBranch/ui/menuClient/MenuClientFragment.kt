@@ -8,18 +8,21 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import android.widget.ImageButton
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.FragmentTransaction
 import com.example.smartwaiter.Prefs.PreLoad.Companion.prefs
 import com.example.smartwaiter.R
-import com.example.smartwaiter.clientBranch.MainClientActivityNav
+import com.example.smartwaiter.clientBranch.ui.cameraQr.CameraQrActivity
 import com.example.smartwaiter.databinding.FragmentMenuBinding
 import com.example.smartwaiter.menu.DrinkFragment
 import com.example.smartwaiter.menu.FoodFragment
 import com.example.smartwaiter.organizationBranch.MainOrganizationNav
 import com.google.android.material.tabs.TabLayout
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.zxing.integration.android.IntentIntegrator
 
 
 class MenuClientFragment : Fragment() {
@@ -38,13 +41,17 @@ class MenuClientFragment : Fragment() {
         var tabLayout: TabLayout = binding.tabLayout
         var frameLayout: FrameLayout = binding.frameLayout
         val root: View = binding.root
-        var email:String = ""
-        var mesa:Int = 0
-        var checker = false
 
 
-        if (prefs.getOrgId() == "" && prefs.getTable() == 0){ loadCamera(context!!)}
-        if (checker){ initMenu(tabLayout) }
+        //initScanner(this)
+        if (prefs.getOrgId() == "" && prefs.getTable() == 0){
+            loadCamera(context!! )
+
+        }else{
+            Toast.makeText(context, "entro", Toast.LENGTH_SHORT).show()
+            initMenu(tabLayout)
+        }
+
 
         return root
     }
@@ -52,7 +59,13 @@ class MenuClientFragment : Fragment() {
     private fun loadCamera(context: Context){
         val builder = AlertDialog.Builder(context)
         val view = layoutInflater.inflate(R.layout.dialog_scan_qr,null)
+        val btnCameraQR = view.findViewById<ImageButton>(R.id.btnCameraQR)!!
         builder.setView(view)
+
+        btnCameraQR.setOnClickListener {
+            val intent = Intent(context, CameraQrActivity::class.java)
+            startActivity(intent)
+        }
 
         val dialog = builder.create() //<- se crea el dialog
         dialog.show() //<- se muestra el showdialog
@@ -60,6 +73,8 @@ class MenuClientFragment : Fragment() {
 
 
     }
+
+
 
     private fun initMenu(tabLayout: TabLayout){
         var fragment:Fragment
