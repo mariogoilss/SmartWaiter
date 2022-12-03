@@ -48,7 +48,6 @@ class MenuClientFragment : Fragment() {
             loadCamera(context!! )
 
         }else{
-            Toast.makeText(context, "entro", Toast.LENGTH_SHORT).show()
             initMenu(tabLayout)
         }
 
