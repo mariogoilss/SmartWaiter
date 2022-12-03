@@ -12,6 +12,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.smartwaiter.Prefs.PreLoad
+import com.example.smartwaiter.Prefs.PreLoad.Companion.prefs
 import com.example.smartwaiter.R
 import com.example.smartwaiter.adapters.AdapterMenuOrgRV
 import com.example.smartwaiter.inteface.BankAccount
@@ -44,6 +45,7 @@ class FoodFragment : Fragment() {
     private val db = FirebaseFirestore.getInstance()
     private var param1: String? = null
     private var param2: String? = null
+    private var idOrganization  = "";
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,6 +59,13 @@ class FoodFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
+        if (prefs.getOrgOrUser()){
+            idOrganization = prefs.getCorreo()
+        }else{
+            idOrganization = prefs.getOrgId()
+        }
+
         // Inflate the layout for this fragment
         var view = inflater.inflate(R.layout.fragment_food, container, false)
         var addFood = view.findViewById<ImageButton>(R.id.btnAddFood)
@@ -78,7 +87,7 @@ class FoodFragment : Fragment() {
     }
 
     private fun load(view: View) {
-        db.collection("organizations").document(PreLoad.prefs.getCorreo()).get().addOnSuccessListener {
+        db.collection("organizations").document(idOrganization).get().addOnSuccessListener {
 
             var arrayToHash = ArrayList<MenuItem>()
             arrayToHash =
@@ -139,7 +148,7 @@ class FoodFragment : Fragment() {
                 "",
                 amount.text.toString().toInt()
             )
-            getOfBBDD(PreLoad.prefs.getCorreo(), menuItem)
+            getOfBBDD(idOrganization, menuItem)
             dialog.onBackPressed()
         }
 
@@ -184,7 +193,7 @@ class FoodFragment : Fragment() {
     }
 
     private fun saveOnBBDD(organization: Organization) {
-        db.collection("organizations").document(PreLoad.prefs.getCorreo()).set(
+        db.collection("organizations").document(idOrganization).set(
             hashMapOf(
                 "orgName" to organization.orgName,
                 "orgCif" to organization.orgCif,

@@ -77,10 +77,12 @@ class MainActivity : AppCompatActivity() {
         db.collection("organizations").document(prefs.getCorreo()).get().addOnSuccessListener {
             if(it.exists()){
                 val intent = Intent(this, MainOrganizationNav::class.java)
+                prefs.saveOrgOrUser(true)
                 startActivity(intent)
             }else{
                 val intent = Intent(this, MainClientActivityNav::class.java)
                 prefs.wipeOrders()
+                prefs.saveOrgOrUser(false)
                 startActivity(intent)
             }
         }
@@ -95,10 +97,12 @@ class MainActivity : AppCompatActivity() {
             db.collection("organizations").document(email).get().addOnSuccessListener {
                 if(it.exists()){
                     val intent = Intent(this, MainOrganizationNav::class.java)
+                    prefs.saveOrgOrUser(true)
                     startActivity(intent)
                 }else{
                     val intent = Intent(this, MainClientActivityNav::class.java)
                     prefs.wipeOrders()
+                    prefs.saveOrgOrUser(false)
                     startActivity(intent)
                 }
             }

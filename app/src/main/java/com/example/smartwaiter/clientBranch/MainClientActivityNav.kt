@@ -1,6 +1,8 @@
 package com.example.smartwaiter.clientBranch
 
+import android.content.DialogInterface
 import android.os.Bundle
+import androidx.appcompat.app.AlertDialog
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
@@ -32,5 +34,22 @@ class MainClientActivityNav : AppCompatActivity() {
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+    }
+
+    override fun onBackPressed() {
+        mostrar_emergente()
+    }
+
+    fun mostrar_emergente(){
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Alerta")
+        builder.setMessage("¿Desea salir de la aplicacion?")
+        builder.setPositiveButton("Si",{ dialogInterface: DialogInterface, i: Int ->
+            finishAffinity()
+        })
+
+        builder.setNegativeButton("No",{ dialogInterface: DialogInterface, i: Int ->
+        })
+        builder.show()
     }
 }

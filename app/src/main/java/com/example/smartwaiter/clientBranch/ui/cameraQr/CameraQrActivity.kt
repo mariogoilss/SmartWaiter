@@ -54,6 +54,8 @@ class CameraQrActivity : AppCompatActivity() {
                     Toast.makeText(this, "Codigo QR no valido", Toast.LENGTH_SHORT).show()
                     onBackPressed()
                 }
+            }else{
+                onBackPressed()
             }
         }else{
             super.onActivityResult(requestCode, resultCode, data)

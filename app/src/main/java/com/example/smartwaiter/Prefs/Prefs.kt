@@ -9,6 +9,7 @@ class Prefs (val context: Context) {
     val SHARED_RECOR = "recor"
     val SHARED_IDORG = "idorg"
     val SHARED_TABLE = "table"
+    val SHARED_ORG_OR_USER = "orgOrUser"
 
 
 
@@ -35,6 +36,10 @@ class Prefs (val context: Context) {
         storage.edit().putInt(SHARED_TABLE,table).apply()
     }
 
+    fun saveOrgOrUser(orgOrUser:Boolean){
+        storage.edit().putBoolean(SHARED_ORG_OR_USER, orgOrUser).apply()
+    }
+
 
 
     /*
@@ -55,6 +60,10 @@ class Prefs (val context: Context) {
 
     fun getTable():Int{
         return storage.getInt(SHARED_TABLE, 0)
+    }
+
+    fun getOrgOrUser():Boolean{
+        return  storage.getBoolean(SHARED_ORG_OR_USER, false)
     }
 
     fun wipeOrders(){
