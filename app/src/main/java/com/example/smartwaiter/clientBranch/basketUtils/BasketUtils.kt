@@ -18,8 +18,6 @@ class BasketUtils {
                     if (saleItemList[i].menuItem == menuItem){
                         saleItemList[i].amount = saleItemList[i].amount + 1
                         saleItemList[i].totalPrice = saleItemList[i].amount *  saleItemList[i].menuItem.price
-
-                        Toast.makeText(context, "" + saleItemList[i].menuItem.name + "," +saleItemList[i].amount+","+ saleItemList[i].totalPrice, Toast.LENGTH_SHORT).show()
                         checker = false
                     }
                 }
