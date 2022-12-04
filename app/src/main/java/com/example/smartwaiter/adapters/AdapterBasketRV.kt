@@ -57,6 +57,7 @@ class AdapterBasketRV : RecyclerView.Adapter<AdapterBasketRV.ViewHolder>(){
 
                 saleItemList.amount = saleItemList.amount - 1
                 if (saleItemList.amount > 0){
+                    saleItemList.totalPrice = saleItemList.amount * saleItemList.menuItem.price
                     amount.text = saleItemList.amount.toString()
                 }else{
                     adapter.saleItemList.removeAt(pos)
@@ -67,6 +68,7 @@ class AdapterBasketRV : RecyclerView.Adapter<AdapterBasketRV.ViewHolder>(){
 
             btnPlus.setOnClickListener {
                 saleItemList.amount = saleItemList.amount + 1
+                saleItemList.totalPrice = saleItemList.amount * saleItemList.menuItem.price
                 amount.text = saleItemList.amount.toString()
             }
 
