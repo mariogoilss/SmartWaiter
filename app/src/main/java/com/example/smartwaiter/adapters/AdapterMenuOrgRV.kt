@@ -11,11 +11,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.smartwaiter.Prefs.PreLoad
 import com.example.smartwaiter.Prefs.PreLoad.Companion.prefs
 import com.example.smartwaiter.R
+import com.example.smartwaiter.clientBranch.basketUtils.BasketUtils
 import com.example.smartwaiter.inteface.*
 import com.example.smartwaiter.menu.arrayDrinkListOrg
 import com.example.smartwaiter.menu.arrayFoodListOrg
 import com.google.firebase.firestore.FirebaseFirestore
-
+import com.example.smartwaiter.clientBranch.basketUtils.BasketUtils.*
 
 private val db = FirebaseFirestore.getInstance()
 class AdapterMenuOrgRV : RecyclerView.Adapter<AdapterMenuOrgRV.ViewHolder>(){
@@ -51,6 +52,7 @@ class AdapterMenuOrgRV : RecyclerView.Adapter<AdapterMenuOrgRV.ViewHolder>(){
         var name = view.findViewById(R.id.txtNameMenuCard) as TextView
         var image = view.findViewById(R.id.imgMenuCard) as ImageView
         var price = view.findViewById(R.id.txtPriceMenuCard) as TextView
+        var btnAddBasket = view.findViewById(R.id.btnAddBasket) as ImageButton
 
 
         fun bind(itemMenu: MenuItem, context: Context, adapter: AdapterMenuOrgRV, pos: Int, foodOrDrink: Boolean) {
@@ -64,7 +66,13 @@ class AdapterMenuOrgRV : RecyclerView.Adapter<AdapterMenuOrgRV.ViewHolder>(){
                 loadDrinkFragment(context, pos, itemMenu, adapter,foodOrDrink)
             })
 
+            if(prefs.getOrgOrUser()){
+                btnAddBasket.isVisible = false
+            }
 
+            btnAddBasket.setOnClickListener {
+                BasketUtils.saveSaleItemList(itemMenu,context)
+            }
 
 
         }

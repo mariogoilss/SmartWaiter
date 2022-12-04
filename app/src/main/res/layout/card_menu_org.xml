@@ -41,6 +41,7 @@
             android:layout_height="35dp"
             android:layout_marginStart="12dp"
             android:gravity="center"
+            android:maxLength="22"
             android:text="Food or drink"
             android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -57,5 +58,17 @@
             android:text="TextView"
             app:layout_constraintStart_toEndOf="@+id/imgMenuCard"
             app:layout_constraintTop_toBottomOf="@+id/txtNameMenuCard" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/btnAddBasket"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.954"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@android:drawable/ic_menu_add" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

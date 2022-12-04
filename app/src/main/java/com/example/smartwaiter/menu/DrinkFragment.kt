@@ -11,6 +11,7 @@ import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.smartwaiter.Prefs.PreLoad.Companion.prefs
@@ -69,6 +70,8 @@ class DrinkFragment : Fragment() {
         // Inflate the layout for this fragment
         var view = inflater.inflate(R.layout.fragment_drink, container, false)
         var addDrink = view.findViewById<ImageButton>(R.id.btnAddDrink)
+
+        if(!prefs.getOrgOrUser()){addDrink.isVisible = false }
 
         addDrink.setOnClickListener {
             loadDrinkFragment()

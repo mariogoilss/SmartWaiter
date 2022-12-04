@@ -9,6 +9,7 @@ import android.widget.CheckBox
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.smartwaiter.Prefs.PreLoad
@@ -69,6 +70,8 @@ class FoodFragment : Fragment() {
         // Inflate the layout for this fragment
         var view = inflater.inflate(R.layout.fragment_food, container, false)
         var addFood = view.findViewById<ImageButton>(R.id.btnAddFood)
+
+        if(!prefs.getOrgOrUser()){addFood.isVisible = false }
 
         addFood.setOnClickListener {
             loadFoodFragment()
