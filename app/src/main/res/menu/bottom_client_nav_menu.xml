@@ -3,16 +3,16 @@
 
     <item
         android:id="@+id/navigation_menuClient"
-        android:icon="@drawable/ic_dashboard_black_24dp"
+        android:icon="@drawable/menu"
         android:title="@string/title_menuClient" />
 
     <item
         android:id="@+id/navigation_basket"
-        android:icon="@drawable/ic_home_black_24dp"
+        android:icon="@drawable/basket"
         android:title="@string/title_basket" />
     <item
         android:id="@+id/navigation_managementClient"
-        android:icon="@drawable/ic_home_black_24dp"
+        android:icon="@drawable/profile"
         android:title="@string/title_managementClient" />
 
 </menu>
