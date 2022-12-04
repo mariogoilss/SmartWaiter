@@ -1,6 +1,7 @@
 package com.example.smartwaiter.clientBranch.basketUtils
 import android.content.Context
 import com.example.smartwaiter.Prefs.PreLoad.Companion.prefs
+import com.example.smartwaiter.adapters.AdapterBasketRV
 import com.example.smartwaiter.inteface.*
 import com.google.firebase.firestore.FirebaseFirestore
 import java.util.*
@@ -46,7 +47,7 @@ class BasketUtils {
 
         }
 
-        fun getOfBBDD() {
+        fun getOfBBDD(adapterBasketRV: AdapterBasketRV) {
             db.collection("organizations").document(prefs.getOrgId()).get().addOnSuccessListener {
 
                 var arrayToHash = it.get("orgBankAccount") as HashMap<String, String> //<-- Pillamos tabla hash BBDD
@@ -70,7 +71,7 @@ class BasketUtils {
                 var salesList = SalesList(Date(),saleItemList,false, prefs.getTable(),benefit())
                 organization.orgSalesList.add(salesList) //<- guardamos el nuevo item
 
-                saveOnBBDD(organization)
+                saveOnBBDD(organization, adapterBasketRV)
             }
 
         }
@@ -85,7 +86,7 @@ class BasketUtils {
             return benefit
         }
 
-        private fun saveOnBBDD(organization: Organization) {
+        private fun saveOnBBDD(organization: Organization, adapterBasketRV: AdapterBasketRV) {
             db.collection("organizations").document(prefs.getOrgId()).set(
                 hashMapOf(
                     "orgName" to organization.orgName,
@@ -100,6 +101,9 @@ class BasketUtils {
                 )
             )
             prefs.wipeOrders()
+            adapterBasketRV.notifyItemRangeRemoved(0,BasketUtils.saleItemList.size)
+            BasketUtils.saleItemList.clear()
+
 
         }
     }
