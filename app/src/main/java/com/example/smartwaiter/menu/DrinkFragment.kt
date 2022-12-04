@@ -11,6 +11,7 @@ import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.smartwaiter.Prefs.PreLoad.Companion.prefs
@@ -46,6 +47,7 @@ class DrinkFragment : Fragment() {
     private val db = FirebaseFirestore.getInstance()
     private var param1: String? = null
     private var param2: String? = null
+    private var idOrganization  = "";
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,9 +61,17 @@ class DrinkFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        if (prefs.getOrgOrUser()){
+            idOrganization = prefs.getCorreo()
+        }else{
+            idOrganization = prefs.getOrgId()
+        }
+
         // Inflate the layout for this fragment
         var view = inflater.inflate(R.layout.fragment_drink, container, false)
         var addDrink = view.findViewById<ImageButton>(R.id.btnAddDrink)
+
+        if(!prefs.getOrgOrUser()){addDrink.isVisible = false }
 
         addDrink.setOnClickListener {
             loadDrinkFragment()
@@ -80,7 +90,7 @@ class DrinkFragment : Fragment() {
     }
 
     private fun load(view: View) {
-        db.collection("organizations").document(prefs.getCorreo()).get().addOnSuccessListener {
+        db.collection("organizations").document(idOrganization).get().addOnSuccessListener {
 
             var arrayToHash = ArrayList<MenuItem>()
             arrayToHash =
@@ -140,7 +150,7 @@ class DrinkFragment : Fragment() {
                 "",
                 amount.text.toString().toInt()
             )
-            getOfBBDD(prefs.getCorreo(), menuItem)
+            getOfBBDD(idOrganization, menuItem)
             dialog.onBackPressed()
         }
 
@@ -185,7 +195,7 @@ class DrinkFragment : Fragment() {
     }
 
     private fun saveOnBBDD(organization: Organization) {
-        db.collection("organizations").document(prefs.getCorreo()).set(
+        db.collection("organizations").document(idOrganization).set(
             hashMapOf(
                 "orgName" to organization.orgName,
                 "orgCif" to organization.orgCif,

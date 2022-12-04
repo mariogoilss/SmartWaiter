@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_menuClient"
+        android:icon="@drawable/menu"
+        android:title="@string/title_menuClient" />
+
+    <item
+        android:id="@+id/navigation_basket"
+        android:icon="@drawable/basket"
+        android:title="@string/title_basket" />
+    <item
+        android:id="@+id/navigation_managementClient"
+        android:icon="@drawable/profile"
+        android:title="@string/title_managementClient" />
+
+</menu>

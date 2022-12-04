@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDelegate
 import com.example.smartwaiter.Prefs.PreLoad.Companion.prefs
+import com.example.smartwaiter.clientBranch.MainClientActivityNav
 import com.example.smartwaiter.organizationBranch.MainOrganizationNav
 import com.example.smartwaiter.registerType.RegisterClientActivity
 import com.example.smartwaiter.registerType.RegisterOwnerActivity
@@ -68,15 +69,21 @@ class MainActivity : AppCompatActivity() {
     fun saveInMemory(email:String, remember: CheckBox){
         prefs.saveCorreo(email)
         prefs.saveRecordar(remember.isChecked)
+        prefs.saveOrgId("")
+        prefs.saveTable(0)
     }
 
     fun memoryEntry(){
         db.collection("organizations").document(prefs.getCorreo()).get().addOnSuccessListener {
             if(it.exists()){
                 val intent = Intent(this, MainOrganizationNav::class.java)
+                prefs.saveOrgOrUser(true)
                 startActivity(intent)
             }else{
-                Toast.makeText(this, "Sin terminar", Toast.LENGTH_SHORT).show()
+                val intent = Intent(this, MainClientActivityNav::class.java)
+                prefs.wipeOrders()
+                prefs.saveOrgOrUser(false)
+                startActivity(intent)
             }
         }
     }
@@ -90,9 +97,13 @@ class MainActivity : AppCompatActivity() {
             db.collection("organizations").document(email).get().addOnSuccessListener {
                 if(it.exists()){
                     val intent = Intent(this, MainOrganizationNav::class.java)
+                    prefs.saveOrgOrUser(true)
                     startActivity(intent)
                 }else{
-                    Toast.makeText(this, "Sin terminar", Toast.LENGTH_SHORT).show()
+                    val intent = Intent(this, MainClientActivityNav::class.java)
+                    prefs.wipeOrders()
+                    prefs.saveOrgOrUser(false)
+                    startActivity(intent)
                 }
             }
         }

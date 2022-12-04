@@ -6,14 +6,17 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.example.smartwaiter.Prefs.PreLoad
+import com.example.smartwaiter.Prefs.PreLoad.Companion.prefs
 import com.example.smartwaiter.R
+import com.example.smartwaiter.clientBranch.basketUtils.BasketUtils
 import com.example.smartwaiter.inteface.*
 import com.example.smartwaiter.menu.arrayDrinkListOrg
 import com.example.smartwaiter.menu.arrayFoodListOrg
 import com.google.firebase.firestore.FirebaseFirestore
-
+import com.example.smartwaiter.clientBranch.basketUtils.BasketUtils.*
 
 private val db = FirebaseFirestore.getInstance()
 class AdapterMenuOrgRV : RecyclerView.Adapter<AdapterMenuOrgRV.ViewHolder>(){
@@ -49,6 +52,8 @@ class AdapterMenuOrgRV : RecyclerView.Adapter<AdapterMenuOrgRV.ViewHolder>(){
         var name = view.findViewById(R.id.txtNameMenuCard) as TextView
         var image = view.findViewById(R.id.imgMenuCard) as ImageView
         var price = view.findViewById(R.id.txtPriceMenuCard) as TextView
+        var btnAddBasket = view.findViewById(R.id.btnAddBasket) as ImageButton
+
 
         fun bind(itemMenu: MenuItem, context: Context, adapter: AdapterMenuOrgRV, pos: Int, foodOrDrink: Boolean) {
 
@@ -56,9 +61,19 @@ class AdapterMenuOrgRV : RecyclerView.Adapter<AdapterMenuOrgRV.ViewHolder>(){
             image = findImage(image, itemMenu, foodOrDrink)
             price.text = itemMenu.price.toString() + "€"
 
+
             itemView.setOnClickListener(View.OnClickListener {
                 loadDrinkFragment(context, pos, itemMenu, adapter,foodOrDrink)
             })
+
+            if(prefs.getOrgOrUser()){
+                btnAddBasket.isVisible = false
+            }
+
+            btnAddBasket.setOnClickListener {
+                BasketUtils.saveSaleItemList(itemMenu,context)
+            }
+
 
         }
 
@@ -74,6 +89,7 @@ class AdapterMenuOrgRV : RecyclerView.Adapter<AdapterMenuOrgRV.ViewHolder>(){
             val price = view.findViewById<TextView>(R.id.txtPriceMenuDialog)!!
             val save = view.findViewById<TextView>(R.id.btnSaveMenuDialog)!!
             val amount = view.findViewById<TextView>(R.id.txtAmountMenuDialog)!!
+            var txtDescriptAccount = view.findViewById<TextView>(R.id.txtDescriptAccount)!!
 
             // Se rellenan los campos del Fragment
             name.text = itemMenu.name
@@ -81,6 +97,16 @@ class AdapterMenuOrgRV : RecyclerView.Adapter<AdapterMenuOrgRV.ViewHolder>(){
             price.text = itemMenu.price.toString()
             amount.text = itemMenu.amountStock.toString()
             check_load(view,itemMenu.allergens as ArrayList<Int>)
+
+            if(!prefs.getOrgOrUser()){
+                name.isFocusable = false
+                description.isFocusable = false
+                price.isFocusable = false
+                amount.isVisible = false
+                save.isVisible = false
+                txtDescriptAccount.isVisible = false
+                cap_checks(view)
+            }
 
             // Fragment Show
             builder.setView(view)
@@ -93,6 +119,17 @@ class AdapterMenuOrgRV : RecyclerView.Adapter<AdapterMenuOrgRV.ViewHolder>(){
                 getOfBBDD(PreLoad.prefs.getCorreo(), menuItem,pos, adapter, foodOrDrink)
                 dialog.onBackPressed()
             }
+        }
+
+        fun cap_checks(view: View){
+            view.findViewById<CheckBox>(R.id.checkBox1).isClickable = false
+            view.findViewById<CheckBox>(R.id.checkBox2).isClickable = false
+            view.findViewById<CheckBox>(R.id.checkBox3).isClickable = false
+            view.findViewById<CheckBox>(R.id.checkBox4).isClickable = false
+            view.findViewById<CheckBox>(R.id.checkBox5).isClickable = false
+            view.findViewById<CheckBox>(R.id.checkBox6).isClickable = false
+            view.findViewById<CheckBox>(R.id.checkBox7).isClickable = false
+            view.findViewById<CheckBox>(R.id.checkBox8).isClickable = false
         }
 
         fun check_load(view: View,allergensList: ArrayList<Int>){
