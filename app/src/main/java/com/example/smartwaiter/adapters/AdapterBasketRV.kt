@@ -28,7 +28,7 @@ class AdapterBasketRV : RecyclerView.Adapter<AdapterBasketRV.ViewHolder>(){
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AdapterBasketRV.ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
         return AdapterBasketRV.ViewHolder(
-            layoutInflater.inflate(R.layout.card_menu_org, parent, false)
+            layoutInflater.inflate(R.layout.card_basket_item, parent, false)
         )
     }
 
