@@ -1,3 +1,14 @@
 <resources>
     <string name="app_name">SmartWaiter</string>
+    <string name="title_activity_main_organization_nav">MainOrganizationNav</string>
+    <string name="title_menuClient">Carta</string>
+    <string name="title_orders">Pedidos</string>
+    <string name="title_menu">Carta</string>
+    <string name="title_management">Administracion</string>
+    <string name="title_basket">Cesta</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_main_client">MainClientActivity</string>
+    <string name="title_managementClient">Perfil</string>
+
 </resources>
