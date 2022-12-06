@@ -87,7 +87,6 @@ class AdapterTableOrgRV : RecyclerView.Adapter<AdapterTableOrgRV.ViewHolder>(){
             idTable.text = id.toString()
 
             btnDelete.setOnClickListener {
-                Toast.makeText(context, "pos -> " + pos, Toast.LENGTH_SHORT).show()
                 mostrar_emergente(context, pos, adapter)
             }
 
@@ -169,7 +168,6 @@ class AdapterTableOrgRV : RecyclerView.Adapter<AdapterTableOrgRV.ViewHolder>(){
                         it.get("orgTablesList") as ArrayList<Int>)
 
                 organization.orgTablesList.removeAt(pos)
-
 
                 adapter.tableList.removeAt(pos)
                 adapter.notifyItemRemoved(pos)
