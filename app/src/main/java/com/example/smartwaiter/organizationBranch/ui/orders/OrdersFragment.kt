@@ -5,17 +5,18 @@ import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
+import android.view.*
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.smartwaiter.Prefs.PreLoad.Companion.prefs
 import com.example.smartwaiter.R
 import com.example.smartwaiter.adapters.AdapterOrdersOrgRV
 import com.example.smartwaiter.inteface.*
+import com.example.smartwaiter.inteface.MenuItem
 import com.example.smartwaiter.organizationBranch.MainOrganizationNav
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
 
@@ -32,14 +33,11 @@ class OrdersFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
         var view = inflater.inflate(R.layout.fragment_orders, container, false)
 
         if (!prefs.getOpenOrNot()){
-            if (mostrar_emergente()){
-                val intent = Intent(context, MainOrganizationNav::class.java)
-                startActivity(intent)
-            }
-
+            mostrar_emergente()
         }else{
             if (ordersList.isEmpty()) {
                 load(view)
@@ -51,6 +49,16 @@ class OrdersFragment : Fragment() {
         return view
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        setHasOptionsMenu(true)
+        super.onCreate(savedInstanceState)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        val inflater: MenuInflater = inflater
+        inflater.inflate(R.menu.open_or_close_menu, menu)
+    }
+
     fun reloadRecycler(view: View){
         recyclerViewOrders = view.findViewById<RecyclerView>(R.id.rvOrdersOrg)
         recyclerViewOrders.setHasFixedSize(true)
@@ -59,18 +67,19 @@ class OrdersFragment : Fragment() {
         recyclerViewOrders.adapter = adapterOrdersOrgRV
     }
 
-    fun mostrar_emergente():Boolean{
-        var checker = false
+    fun mostrar_emergente(){
+
         val builder = AlertDialog.Builder(context)
         builder.setTitle("El establecimiento es cerrado.")
         builder.setMessage("¿Desea abrirlo?")
         builder.setPositiveButton("Si",{ dialogInterface: DialogInterface, i: Int ->
             openOrganization()
-            checker = true})
+            val intent = Intent(context, MainOrganizationNav::class.java)
+            startActivity(intent)
+        })
         builder.setNegativeButton("No",{ dialogInterface: DialogInterface, i: Int -> })
         builder.show()
 
-        return checker
 
     }
 
@@ -83,9 +92,6 @@ class OrdersFragment : Fragment() {
         prefs.saveOpenOrNot(false)
         getOfBBDD(prefs.getOpenOrNot())
     }
-
-
-
 
     private fun load(view: View) {
         db.collection("organizations").document(prefs.getCorreo()).get().addOnSuccessListener {
@@ -157,6 +163,46 @@ class OrdersFragment : Fragment() {
             )
         )
     }
+
+
+    override fun onOptionsItemSelected(item: android.view.MenuItem): Boolean {
+        when(item.itemId){
+            R.id.btnOpenOrganization -> {
+                if (!prefs.getOpenOrNot()){
+                    openOrganization()
+                    val intent = Intent(context, MainOrganizationNav::class.java)
+                    startActivity(intent)
+                    Toast.makeText(context, "Establecimiento abierto", Toast.LENGTH_SHORT).show()
+                }else{
+                    val builder = AlertDialog.Builder(context)
+                    builder.setTitle("Atencion")
+                    builder.setMessage("El establecimiento ya esta abierto.")
+                    builder.setPositiveButton("Aceptar",{ dialogInterface: DialogInterface, i: Int -> })
+                    builder.show()
+                }
+
+            }
+
+            R.id.btnCloseOrganization -> {
+                if(prefs.getOpenOrNot()){
+                    closeOrganization()
+                    val intent = Intent(context, MainOrganizationNav::class.java)
+                    startActivity(intent)
+                    Toast.makeText(context, "Establecimiento cerrado", Toast.LENGTH_SHORT).show()
+
+                }else{
+                    val builder = AlertDialog.Builder(context)
+                    builder.setTitle("Atencion")
+                    builder.setMessage("El establecimiento ya esta cerrado.")
+                    builder.setPositiveButton("Aceptar",{ dialogInterface: DialogInterface, i: Int -> })
+                    builder.show()
+                }
+            }
+
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
 
 
 
