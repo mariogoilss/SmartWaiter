@@ -17,6 +17,7 @@ import com.example.smartwaiter.menu.arrayDrinkListOrg
 import com.example.smartwaiter.menu.arrayFoodListOrg
 import com.google.firebase.firestore.FirebaseFirestore
 import com.example.smartwaiter.clientBranch.basketUtils.BasketUtils.*
+import com.example.smartwaiter.utils.utilsBBDD
 
 private val db = FirebaseFirestore.getInstance()
 class AdapterMenuOrgRV : RecyclerView.Adapter<AdapterMenuOrgRV.ViewHolder>(){
@@ -218,24 +219,9 @@ class AdapterMenuOrgRV : RecyclerView.Adapter<AdapterMenuOrgRV.ViewHolder>(){
 
 
                 adapter.notifyItemChanged(pos)
-                saveOnBBDD(organization)
-            }
-        }
+                utilsBBDD.saveOnBBDD(organization)
 
-        private fun saveOnBBDD(organization: Organization){
-            db.collection("organizations").document(PreLoad.prefs.getCorreo()).set(
-                hashMapOf(
-                    "orgName" to organization.orgName,
-                    "orgCif" to organization.orgCif,
-                    "orgFoodList" to organization.orgFoodList,
-                    "orgDrinkList" to organization.orgDrinkList,
-                    "orgOpenOrNot" to organization.orgOpenOrNot,
-                    "orgSalesList" to organization.orgSalesList,
-                    "orgBankAccount" to organization.orgBankAccount,
-                    "orgSuggestionsMailBox" to organization.orgSuggestionsMailBox,
-                    "orgTablesList" to organization.orgTablesList
-                )
-            )
+            }
         }
 
         private fun findImage(image: ImageView, itemMenu: MenuItem, foodOrDrink: Boolean): ImageView {

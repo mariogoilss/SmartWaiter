@@ -8,8 +8,16 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.smartwaiter.Prefs.PreLoad
 import com.example.smartwaiter.R
+import com.example.smartwaiter.inteface.BankAccount
+import com.example.smartwaiter.inteface.MenuItem
+import com.example.smartwaiter.inteface.Organization
 import com.example.smartwaiter.inteface.SalesList
+import com.example.smartwaiter.utils.utilsBBDD
+import com.google.firebase.firestore.FirebaseFirestore
+
+private val db = FirebaseFirestore.getInstance()
 
 class AdapterOrdersOrgRV : RecyclerView.Adapter<AdapterOrdersOrgRV.ViewHolder>(){
 
@@ -17,8 +25,18 @@ class AdapterOrdersOrgRV : RecyclerView.Adapter<AdapterOrdersOrgRV.ViewHolder>()
     lateinit var context: Context
 
     fun AdapterOrdersOrgRV(ordersList: ArrayList<SalesList>, context: Context) {
-        this.ordersList = ordersList
+        this.ordersList = onlyFalses(ordersList)
         this.context = context
+    }
+
+    fun onlyFalses(ordersList: ArrayList<SalesList>): ArrayList<SalesList>{
+        var list = ArrayList<SalesList>()
+        for (i in 0 until ordersList.size){
+            if (!ordersList[i].done){
+                list.add(ordersList[i])
+            }
+        }
+        return list
     }
 
     override fun onBindViewHolder(holder: AdapterOrdersOrgRV.ViewHolder, position: Int) {
@@ -46,7 +64,39 @@ class AdapterOrdersOrgRV : RecyclerView.Adapter<AdapterOrdersOrgRV.ViewHolder>()
         fun bind(ordersList: SalesList, context: Context, adapter: AdapterOrdersOrgRV, pos: Int ) {
             txtTableOrder.text = ordersList.table.toString()
             txtDateOrder.text = ordersList.date.toString()
+
+            btnCheckOrder.setOnClickListener {
+
+            }
         }
+
+        private fun getOfBBDD(openOrNot:Boolean){
+            db.collection("organizations").document(PreLoad.prefs.getCorreo()).get().addOnSuccessListener {
+
+                var arrayToHash = it.get("orgBankAccount") as HashMap<String, String> //<-- Pillamos tabla hash BBDD
+                var bankAccount = BankAccount(
+                    arrayToHash.getValue("account"),
+                    arrayToHash.getValue("expirationDate"),
+                    arrayToHash.getValue("secretNumber")
+                )
+
+                var organization =
+                    Organization(it.get("orgName") as String,
+                        it.get("orgCif") as String,
+                        it.get("orgFoodList") as ArrayList<MenuItem>,
+                        it.get("orgDrinkList") as ArrayList<MenuItem>,
+                        it.get("orgOpenOrNot") as Boolean,
+                        it.get("orgSalesList") as ArrayList<SalesList>,
+                        bankAccount,
+                        it.get("orgSuggestionsMailBox") as ArrayList<String>,
+                        it.get("orgTablesList") as ArrayList<Int>)
+
+                utilsBBDD.saveOnBBDD(organization)
+            }
+
+        }
+
+
 
     }
 }

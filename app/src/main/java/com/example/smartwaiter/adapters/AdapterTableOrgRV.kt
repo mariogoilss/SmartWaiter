@@ -33,6 +33,7 @@ import com.example.smartwaiter.inteface.Organization
 import com.example.smartwaiter.inteface.SalesList
 import com.example.smartwaiter.menu.arrayDrinkListOrg
 import com.example.smartwaiter.menu.arrayFoodListOrg
+import com.example.smartwaiter.utils.utilsBBDD
 
 
 import com.google.firebase.firestore.FirebaseFirestore
@@ -173,27 +174,13 @@ class AdapterTableOrgRV : RecyclerView.Adapter<AdapterTableOrgRV.ViewHolder>(){
                 adapter.notifyItemRemoved(pos)
                 adapter.notifyItemRangeChanged( 0, adapter.tableList.size)
 
-                saveOnBBDD(organization)
+                utilsBBDD.saveOnBBDD(organization)
             }
 
 
         }
 
-        private fun saveOnBBDD(organization: Organization) {
-            db.collection("organizations").document(PreLoad.prefs.getCorreo()).set(
-                hashMapOf(
-                    "orgName" to organization.orgName,
-                    "orgCif" to organization.orgCif,
-                    "orgFoodList" to organization.orgFoodList,
-                    "orgDrinkList" to organization.orgDrinkList,
-                    "orgOpenOrNot" to organization.orgOpenOrNot,
-                    "orgSalesList" to organization.orgSalesList,
-                    "orgBankAccount" to organization.orgBankAccount,
-                    "orgSuggestionsMailBox" to organization.orgSuggestionsMailBox,
-                    "orgTablesList" to organization.orgTablesList
-                )
-            )
-        }
+
 
         fun mostrar_emergente(context:Context,pos: Int, adapter:AdapterTableOrgRV){
             val builder = AlertDialog.Builder(context)
