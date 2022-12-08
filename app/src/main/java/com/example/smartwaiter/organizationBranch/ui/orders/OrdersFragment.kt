@@ -35,14 +35,14 @@ class OrdersFragment : Fragment() {
     ): View? {
 
         var view = inflater.inflate(R.layout.fragment_orders, container, false)
-
+        recyclerViewOrders = view.findViewById<RecyclerView>(R.id.rvOrdersOrg)
         if (!prefs.getOpenOrNot()){
             mostrar_emergente()
         }else{
             if (ordersList.isEmpty()) {
-                load(view)
+                load()
             } else {
-                reloadRecycler(view)
+                reloadRecycler()
             }
         }
 
@@ -59,8 +59,7 @@ class OrdersFragment : Fragment() {
         inflater.inflate(R.menu.open_or_close_menu, menu)
     }
 
-    fun reloadRecycler(view: View){
-        recyclerViewOrders = view.findViewById<RecyclerView>(R.id.rvOrdersOrg)
+    fun reloadRecycler(){
         recyclerViewOrders.setHasFixedSize(true)
         recyclerViewOrders.layoutManager = LinearLayoutManager(context!!)
         adapterOrdersOrgRV.AdapterOrdersOrgRV(ordersList, context!!)
@@ -74,8 +73,8 @@ class OrdersFragment : Fragment() {
         builder.setMessage("¿Desea abrirlo?")
         builder.setPositiveButton("Si",{ dialogInterface: DialogInterface, i: Int ->
             openOrganization()
-            val intent = Intent(context, MainOrganizationNav::class.java)
-            startActivity(intent)
+            load()
+            reloadRecycler()
         })
         builder.setNegativeButton("No",{ dialogInterface: DialogInterface, i: Int -> })
         builder.show()
@@ -93,7 +92,7 @@ class OrdersFragment : Fragment() {
         getOfBBDD(prefs.getOpenOrNot())
     }
 
-    private fun load(view: View) {
+    private fun load() {
         db.collection("organizations").document(prefs.getCorreo()).get().addOnSuccessListener {
 
             if(it.get("orgSalesList") != null){
@@ -116,7 +115,7 @@ class OrdersFragment : Fragment() {
                     ordersList.add(salesList)
                 }
 
-                reloadRecycler(view)
+                reloadRecycler()
             }
         }
 
@@ -170,8 +169,8 @@ class OrdersFragment : Fragment() {
             R.id.btnOpenOrganization -> {
                 if (!prefs.getOpenOrNot()){
                     openOrganization()
-                    val intent = Intent(context, MainOrganizationNav::class.java)
-                    startActivity(intent)
+                    load()
+                    reloadRecycler()
                     Toast.makeText(context, "Establecimiento abierto", Toast.LENGTH_SHORT).show()
                 }else{
                     val builder = AlertDialog.Builder(context)
@@ -186,9 +185,10 @@ class OrdersFragment : Fragment() {
             R.id.btnCloseOrganization -> {
                 if(prefs.getOpenOrNot()){
                     closeOrganization()
-                    val intent = Intent(context, MainOrganizationNav::class.java)
-                    startActivity(intent)
+                    ordersList.clear()
+                    reloadRecycler()
                     Toast.makeText(context, "Establecimiento cerrado", Toast.LENGTH_SHORT).show()
+
 
                 }else{
                     val builder = AlertDialog.Builder(context)
@@ -196,6 +196,7 @@ class OrdersFragment : Fragment() {
                     builder.setMessage("El establecimiento ya esta cerrado.")
                     builder.setPositiveButton("Aceptar",{ dialogInterface: DialogInterface, i: Int -> })
                     builder.show()
+
                 }
             }
 
