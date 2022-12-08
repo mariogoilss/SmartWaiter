@@ -71,6 +71,7 @@ class MainActivity : AppCompatActivity() {
         prefs.saveRecordar(remember.isChecked)
         prefs.saveOrgId("")
         prefs.saveTable(0)
+        prefs.saveOpenOrNot(false)
     }
 
     fun memoryEntry(){

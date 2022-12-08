@@ -68,7 +68,7 @@ class BasketUtils {
                         it.get("orgSuggestionsMailBox") as ArrayList<String>,
                         it.get("orgTablesList") as ArrayList<Int>)
 
-                var salesList = SalesList(Date(),saleItemList,false, prefs.getTable(),benefit())
+                var salesList = SalesList(Date().toString(),saleItemList,false, prefs.getTable().toLong(),benefit())
                 organization.orgSalesList.add(salesList) //<- guardamos el nuevo item
 
                 saveOnBBDD(organization, adapterBasketRV)
