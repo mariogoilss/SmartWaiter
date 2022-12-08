@@ -39,13 +39,21 @@ class OrdersFragment : Fragment() {
         if (!prefs.getOpenOrNot()){
             mostrar_emergente()
         }else{
+
             if (ordersList.isEmpty()) {
                 load()
-            } else {
-                reloadRecycler()
+            } else{
+
+                val docRef = db.collection("organizations").document(prefs.getCorreo())
+                docRef.addSnapshotListener { snapshot, e ->
+                    if (snapshot != null && snapshot.exists()) {
+                        ordersList.clear()
+                        load()
+                        reloadRecycler()
+                    }
+                }
             }
         }
-
         return view
     }
 

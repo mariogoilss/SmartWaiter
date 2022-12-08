@@ -4,6 +4,8 @@ import com.example.smartwaiter.Prefs.PreLoad.Companion.prefs
 import com.example.smartwaiter.adapters.AdapterBasketRV
 import com.example.smartwaiter.inteface.*
 import com.google.firebase.firestore.FirebaseFirestore
+import java.text.SimpleDateFormat
+import java.time.format.DateTimeFormatter
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
@@ -68,7 +70,9 @@ class BasketUtils {
                         it.get("orgSuggestionsMailBox") as ArrayList<String>,
                         it.get("orgTablesList") as ArrayList<Int>)
 
-                var salesList = SalesList(Date().toString(),saleItemList,false, prefs.getTable().toLong(),benefit())
+
+                val dateFormated = SimpleDateFormat("dd/MM/yyyy HH:mm").format(Date())
+                var salesList = SalesList(dateFormated,saleItemList,false, prefs.getTable().toLong(),benefit())
                 organization.orgSalesList.add(salesList) //<- guardamos el nuevo item
 
                 saveOnBBDD(organization, adapterBasketRV)

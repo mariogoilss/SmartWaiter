@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -38,8 +39,13 @@ class AdapterOrdersOrgRV : RecyclerView.Adapter<AdapterOrdersOrgRV.ViewHolder>()
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
-        fun bind(ordersList: SalesList, context: Context, adapter: AdapterOrdersOrgRV, pos: Int ) {
+        val txtTableOrder = view.findViewById<TextView>(R.id.txtTableOrder)!!
+        val txtDateOrder = view.findViewById<TextView>(R.id.txtDateOrder)!!
+        val btnCheckOrder = view.findViewById<ImageButton>(R.id.btnCheckOrder)!!
 
+        fun bind(ordersList: SalesList, context: Context, adapter: AdapterOrdersOrgRV, pos: Int ) {
+            txtTableOrder.text = ordersList.table.toString()
+            txtDateOrder.text = ordersList.date.toString()
         }
 
     }
