@@ -30,6 +30,8 @@ class BasketFragment : Fragment() {
 
         btnSendBasket.setOnClickListener {
             if (BasketUtils.saleItemList.size > 0){
+                BasketUtils.saveOnShopList()
+                Thread.sleep(500)
                 BasketUtils.getOfBBDD(adapterBasketRV)
                 Toast.makeText(context, "Compra realizada", Toast.LENGTH_SHORT).show()
             }else{

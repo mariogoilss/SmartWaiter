@@ -19,8 +19,53 @@ class BasketUtils {
     companion object{
         private val db = FirebaseFirestore.getInstance()
         var saleItemList = ArrayList<SaleItem>()
+        var item = prefs.getOrgId()
 
 
+        fun saveOnShopList(){
+            db.collection("users").document(prefs.getCorreo()).get().addOnSuccessListener {
+                var arrayToHash = it.get("usrBankAccount") as HashMap<String, String> //<-- Pillamos tabla hash BBDD
+                var bankAccount = BankAccount(
+                    arrayToHash.getValue("account"),
+                    arrayToHash.getValue("expirationDate"),
+                    arrayToHash.getValue("secretNumber")
+                )
+
+                var client = Client(
+                    it.get("usrName") as String,
+                    it.get("usrImageProfile") as String,
+                    bankAccount,
+                    it.get("usrShopList") as ArrayList<ShopInfo>)
+
+                db.collection("organizations").document(prefs.getOrgId()).get().addOnSuccessListener{
+                    var name = it.get("orgName") as String
+                    var sale =  ShopInfo(item, name)
+                    client.shopList.add(sale)
+
+                    db.collection("users").document(prefs.getCorreo()).set(
+                        hashMapOf(
+                            "usrName" to client.name,
+                            "usrImageProfile" to client.imgProfile,
+                            "usrBankAccount" to client.bankAccount,
+                            "usrShopList" to client.shopList
+
+                        )
+                    )
+                }
+
+
+                db.collection("users").document(prefs.getCorreo()).set(
+                    hashMapOf(
+                        "usrName" to client.name,
+                        "orgImageProfile" to client.imgProfile,
+                        "usrBankAccount" to client.bankAccount,
+                        "orgDrinkList" to client.shopList
+
+                    )
+                )
+
+            }
+        }
 
         fun saveSaleItemList(menuItem: MenuItem, context:Context){
             var amount:Int = 0
@@ -45,8 +90,6 @@ class BasketUtils {
                 var saleItem = SaleItem(menuItem,amount, (menuItem.price*amount))
                 saleItemList.add(saleItem)
             }
-
-
         }
 
         fun getOfBBDD(adapterBasketRV: AdapterBasketRV) {
