@@ -38,8 +38,9 @@ class BasketUtils {
                     it.get("usrShopList") as ArrayList<ShopInfo>)
 
                 db.collection("organizations").document(prefs.getOrgId()).get().addOnSuccessListener{
-                    var name = it.get("orgName") as String
-                    var sale =  ShopInfo(item, name)
+                    var nameOrganization = it.get("orgName") as String
+                    var sale =  ShopInfo(item, nameOrganization)
+
                     client.shopList.add(sale)
 
                     db.collection("users").document(prefs.getCorreo()).set(
