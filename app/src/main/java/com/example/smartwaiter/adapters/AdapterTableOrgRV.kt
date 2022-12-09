@@ -1,16 +1,9 @@
 package com.example.smartwaiter.adapters
-import android.Manifest.permission.READ_EXTERNAL_STORAGE
-import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
-import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
-import android.content.ContextWrapper
 import android.content.DialogInterface
-import android.content.pm.PackageManager
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.graphics.Paint
-import android.graphics.Typeface
 import android.graphics.pdf.PdfDocument
 import android.os.Environment
 import android.text.TextPaint
@@ -20,26 +13,19 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
-import androidx.core.graphics.createBitmap
 import androidx.recyclerview.widget.RecyclerView
-import com.example.smartwaiter.Prefs.PreLoad
 import com.example.smartwaiter.Prefs.PreLoad.Companion.prefs
 import com.example.smartwaiter.R
 import com.example.smartwaiter.inteface.BankAccount
 import com.example.smartwaiter.inteface.MenuItem
 import com.example.smartwaiter.inteface.Organization
 import com.example.smartwaiter.inteface.SalesList
-import com.example.smartwaiter.menu.arrayDrinkListOrg
-import com.example.smartwaiter.menu.arrayFoodListOrg
-import com.example.smartwaiter.utils.utilsBBDD
+import com.example.smartwaiter.utils.UtilsBBDD
 
 
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.zxing.BarcodeFormat
 import com.journeyapps.barcodescanner.BarcodeEncoder
-import io.grpc.internal.DnsNameResolver.SrvRecord
 import java.io.File
 import java.io.FileOutputStream
 
@@ -174,7 +160,7 @@ class AdapterTableOrgRV : RecyclerView.Adapter<AdapterTableOrgRV.ViewHolder>(){
                 adapter.notifyItemRemoved(pos)
                 adapter.notifyItemRangeChanged( 0, adapter.tableList.size)
 
-                utilsBBDD.saveOnBBDD(organization)
+                UtilsBBDD.saveOnBBDD(organization)
             }
 
 

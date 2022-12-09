@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
 import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.smartwaiter.Prefs.PreLoad.Companion.prefs
@@ -16,46 +17,18 @@ import com.example.smartwaiter.adapters.AdapterOrdersOrgRV
 import com.example.smartwaiter.inteface.*
 import com.example.smartwaiter.inteface.MenuItem
 import com.example.smartwaiter.organizationBranch.MainOrganizationNav
+import com.example.smartwaiter.organizationBranch.ordersUtils.OrdersUtils
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
 
 private lateinit var recyclerViewOrders: RecyclerView
 private val adapterOrdersOrgRV: AdapterOrdersOrgRV = AdapterOrdersOrgRV()
-var ordersList = ArrayList<SalesList>()//<-- Declaramos el arrayList a devolver
 
 
 class OrdersFragment : Fragment() {
 
     private val db = FirebaseFirestore.getInstance()
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-
-        var view = inflater.inflate(R.layout.fragment_orders, container, false)
-        recyclerViewOrders = view.findViewById<RecyclerView>(R.id.rvOrdersOrg)
-        if (!prefs.getOpenOrNot()){
-            mostrar_emergente()
-        }else{
-
-            if (ordersList.isEmpty()) {
-                load()
-            } else{
-
-                val docRef = db.collection("organizations").document(prefs.getCorreo())
-                docRef.addSnapshotListener { snapshot, e ->
-                    if (snapshot != null && snapshot.exists()) {
-                        ordersList.clear()
-                        load()
-                        reloadRecycler()
-                    }
-                }
-            }
-        }
-        return view
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setHasOptionsMenu(true)
@@ -67,10 +40,50 @@ class OrdersFragment : Fragment() {
         inflater.inflate(R.menu.open_or_close_menu, menu)
     }
 
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+
+        var view = inflater.inflate(R.layout.fragment_orders, container, false)
+        recyclerViewOrders = view.findViewById<RecyclerView>(R.id.rvOrdersOrg)
+
+
+
+
+
+        val docRef = db.collection("organizations").document(prefs.getCorreo())
+        docRef.addSnapshotListener { snapshot, e ->
+            if (snapshot != null && snapshot.exists()) {
+                var list = snapshot.get("orgSalesList") as ArrayList<SalesList>
+                if (list.size != OrdersUtils.ordersList.size){
+                    Toast.makeText(context, "pillo camvio", Toast.LENGTH_SHORT).show()
+                    OrdersUtils.ordersList.clear()
+                    adapterOrdersOrgRV.ordersList.clear()
+                    load()
+
+                }else{
+                    Toast.makeText(context, "cargo normal", Toast.LENGTH_SHORT).show()
+                    reloadRecycler()
+
+                }
+            }
+        }
+
+
+
+
+        return view
+    }
+
+    fun asdf(){
+        recyclerViewOrders.isVisible = prefs.getOpenOrNot()
+    }
+
     fun reloadRecycler(){
         recyclerViewOrders.setHasFixedSize(true)
         recyclerViewOrders.layoutManager = LinearLayoutManager(context!!)
-        adapterOrdersOrgRV.AdapterOrdersOrgRV(ordersList, context!!)
+        adapterOrdersOrgRV.AdapterOrdersOrgRV(OrdersUtils.ordersList, context!!)
         recyclerViewOrders.adapter = adapterOrdersOrgRV
     }
 
@@ -120,7 +133,7 @@ class OrdersFragment : Fragment() {
                         x.getValue("benefit") as Double
                     )
 
-                    ordersList.add(salesList)
+                    OrdersUtils.ordersList.add(salesList)
                 }
 
                 reloadRecycler()
@@ -177,8 +190,6 @@ class OrdersFragment : Fragment() {
             R.id.btnOpenOrganization -> {
                 if (!prefs.getOpenOrNot()){
                     openOrganization()
-                    load()
-                    reloadRecycler()
                     Toast.makeText(context, "Establecimiento abierto", Toast.LENGTH_SHORT).show()
                 }else{
                     val builder = AlertDialog.Builder(context)
@@ -193,8 +204,6 @@ class OrdersFragment : Fragment() {
             R.id.btnCloseOrganization -> {
                 if(prefs.getOpenOrNot()){
                     closeOrganization()
-                    ordersList.clear()
-                    reloadRecycler()
                     Toast.makeText(context, "Establecimiento cerrado", Toast.LENGTH_SHORT).show()
 
 

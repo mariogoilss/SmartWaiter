@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.smartwaiter.Prefs.PreLoad
@@ -14,7 +13,7 @@ import com.example.smartwaiter.inteface.BankAccount
 import com.example.smartwaiter.inteface.MenuItem
 import com.example.smartwaiter.inteface.Organization
 import com.example.smartwaiter.inteface.SalesList
-import com.example.smartwaiter.utils.utilsBBDD
+import com.example.smartwaiter.utils.UtilsBBDD
 import com.google.firebase.firestore.FirebaseFirestore
 
 private val db = FirebaseFirestore.getInstance()
@@ -91,7 +90,7 @@ class AdapterOrdersOrgRV : RecyclerView.Adapter<AdapterOrdersOrgRV.ViewHolder>()
                         it.get("orgSuggestionsMailBox") as ArrayList<String>,
                         it.get("orgTablesList") as ArrayList<Int>)
 
-                utilsBBDD.saveOnBBDD(organization)
+                UtilsBBDD.saveOnBBDD(organization)
             }
 
         }

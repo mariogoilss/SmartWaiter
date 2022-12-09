@@ -1,10 +1,11 @@
 package com.example.smartwaiter.utils
 
 import com.example.smartwaiter.Prefs.PreLoad
+import com.example.smartwaiter.inteface.Client
 import com.example.smartwaiter.inteface.Organization
 import com.google.firebase.firestore.FirebaseFirestore
 
-class utilsBBDD {
+class UtilsBBDD {
 
     companion object{
         private val db = FirebaseFirestore.getInstance()
@@ -21,6 +22,17 @@ class utilsBBDD {
                     "orgBankAccount" to organization.orgBankAccount,
                     "orgSuggestionsMailBox" to organization.orgSuggestionsMailBox,
                     "orgTablesList" to organization.orgTablesList
+                )
+            )
+        }
+
+        fun saveOnBBDDClient(client: Client){
+            db.collection("users").document(PreLoad.prefs.getCorreo()).set(
+                hashMapOf(
+                    "usrName" to client.name,
+                    "usrImageProfile" to client.imgProfile,
+                    "usrBankAccount" to client.bankAccount,
+                    "usrShopList" to client.shopList
                 )
             )
         }

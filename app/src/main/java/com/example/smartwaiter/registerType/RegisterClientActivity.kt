@@ -8,6 +8,8 @@ import android.widget.EditText
 import android.widget.Toast
 import com.example.smartwaiter.MainActivity
 import com.example.smartwaiter.R
+import com.example.smartwaiter.inteface.BankAccount
+import com.example.smartwaiter.inteface.ShopInfo
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
@@ -48,10 +50,13 @@ class RegisterClientActivity : AppCompatActivity() {
 
 
     private fun saveInBBDD(name:String, email:String){
+        var img = ""
         db.collection("users").document(email).set(
             hashMapOf(
                 "usrName" to name,
-                "usrFirstInit" to true
+                "usrBankAccount" to BankAccount("123456789","21/7","123"),
+                "usrImageProfile" to img,
+                "usrShopList" to arrayListOf<ShopInfo>()
             )
         )
     }

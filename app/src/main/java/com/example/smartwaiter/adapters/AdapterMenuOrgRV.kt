@@ -16,8 +16,7 @@ import com.example.smartwaiter.inteface.*
 import com.example.smartwaiter.menu.arrayDrinkListOrg
 import com.example.smartwaiter.menu.arrayFoodListOrg
 import com.google.firebase.firestore.FirebaseFirestore
-import com.example.smartwaiter.clientBranch.basketUtils.BasketUtils.*
-import com.example.smartwaiter.utils.utilsBBDD
+import com.example.smartwaiter.utils.UtilsBBDD
 
 private val db = FirebaseFirestore.getInstance()
 class AdapterMenuOrgRV : RecyclerView.Adapter<AdapterMenuOrgRV.ViewHolder>(){
@@ -219,7 +218,7 @@ class AdapterMenuOrgRV : RecyclerView.Adapter<AdapterMenuOrgRV.ViewHolder>(){
 
 
                 adapter.notifyItemChanged(pos)
-                utilsBBDD.saveOnBBDD(organization)
+                UtilsBBDD.saveOnBBDD(organization)
 
             }
         }
