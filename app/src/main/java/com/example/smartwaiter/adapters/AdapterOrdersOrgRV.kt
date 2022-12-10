@@ -1,18 +1,21 @@
 package com.example.smartwaiter.adapters
 
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.TextView
+import android.widget.Toast
+import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
+import com.example.smartwaiter.MainActivity
 import com.example.smartwaiter.Prefs.PreLoad
 import com.example.smartwaiter.R
-import com.example.smartwaiter.inteface.BankAccount
-import com.example.smartwaiter.inteface.MenuItem
-import com.example.smartwaiter.inteface.Organization
-import com.example.smartwaiter.inteface.SalesList
+import com.example.smartwaiter.inteface.*
+import com.example.smartwaiter.organizationBranch.ui.orderDetail.OrderDatailActivity
+import com.example.smartwaiter.registerType.RegisterClientActivity
 import com.example.smartwaiter.utils.UtilsBBDD
 import com.google.firebase.firestore.FirebaseFirestore
 
@@ -20,10 +23,13 @@ private val db = FirebaseFirestore.getInstance()
 
 class AdapterOrdersOrgRV : RecyclerView.Adapter<AdapterOrdersOrgRV.ViewHolder>(){
 
+
     var ordersList: ArrayList<SalesList> = ArrayList()
+    var originalList: ArrayList<SalesList> = ArrayList()
     lateinit var context: Context
 
     fun AdapterOrdersOrgRV(ordersList: ArrayList<SalesList>, context: Context) {
+        this.originalList = ordersList
         this.ordersList = onlyFalses(ordersList)
         this.context = context
     }
@@ -40,7 +46,7 @@ class AdapterOrdersOrgRV : RecyclerView.Adapter<AdapterOrdersOrgRV.ViewHolder>()
 
     override fun onBindViewHolder(holder: AdapterOrdersOrgRV.ViewHolder, position: Int) {
         val item = ordersList.get(position)
-        holder.bind(item, context, this, position)
+        holder.bind(item, context, this, position, originalList)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AdapterOrdersOrgRV.ViewHolder {
@@ -54,23 +60,59 @@ class AdapterOrdersOrgRV : RecyclerView.Adapter<AdapterOrdersOrgRV.ViewHolder>()
         return ordersList.size
     }
 
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    class ViewHolder(view: View) : RecyclerView.ViewHolder(view){
 
         val txtTableOrder = view.findViewById<TextView>(R.id.txtTableOrder)!!
         val txtDateOrder = view.findViewById<TextView>(R.id.txtDateOrder)!!
         val btnCheckOrder = view.findViewById<ImageButton>(R.id.btnCheckOrder)!!
+        val btnViewOrder = view.findViewById<ImageButton>(R.id.btnViewOrder)!!
 
-        fun bind(ordersList: SalesList, context: Context, adapter: AdapterOrdersOrgRV, pos: Int ) {
+        fun bind(ordersList: SalesList, context: Context, adapter: AdapterOrdersOrgRV, pos: Int, originalList:ArrayList<SalesList>) {
             txtTableOrder.text = ordersList.table.toString()
             txtDateOrder.text = ordersList.date.toString()
 
             btnCheckOrder.setOnClickListener {
+                getOfBBDD(pos,context ,adapter, originalList,ordersList)
+            }
+
+            btnViewOrder.setOnClickListener {
+
+                var position = 0
+                for (i in 0 until originalList.size){
+                    //Toast.makeText(context, "posrv -> ${pos}, posbbdd -> $i", Toast.LENGTH_SHORT).show()
+                    if (originalList[i] == ordersList){
+                        position = i
+                    }
+                }
+
+                var intent = Intent(context, OrderDatailActivity::class.java)
+                intent.putExtra("position", position)
+                context.startActivity(intent)
+
+
 
             }
         }
 
-        private fun getOfBBDD(openOrNot:Boolean){
+        private fun getOfBBDD(
+            pos: Int,
+            context: Context,
+            adapter: AdapterOrdersOrgRV,
+            originalList: ArrayList<SalesList>,
+            objSale: SalesList
+        ) {
+
+
+
             db.collection("organizations").document(PreLoad.prefs.getCorreo()).get().addOnSuccessListener {
+
+                var position = 0
+                for (i in 0 until originalList.size){
+                    //Toast.makeText(context, "posrv -> ${pos}, posbbdd -> $i", Toast.LENGTH_SHORT).show()
+                    if (originalList[i] == objSale){
+                        originalList[i].done = true
+                    }
+                }
 
                 var arrayToHash = it.get("orgBankAccount") as HashMap<String, String> //<-- Pillamos tabla hash BBDD
                 var bankAccount = BankAccount(
@@ -90,7 +132,15 @@ class AdapterOrdersOrgRV : RecyclerView.Adapter<AdapterOrdersOrgRV.ViewHolder>()
                         it.get("orgSuggestionsMailBox") as ArrayList<String>,
                         it.get("orgTablesList") as ArrayList<Int>)
 
+
+                organization.orgSalesList = originalList
                 UtilsBBDD.saveOnBBDD(organization)
+
+
+                adapter.ordersList.removeAt(pos)
+                adapter.notifyItemRemoved(pos)
+                adapter.notifyItemRangeChanged( 0, adapter.ordersList.size)
+
             }
 
         }
