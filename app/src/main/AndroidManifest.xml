@@ -18,6 +18,13 @@
         android:theme="@style/Theme.SmartWaiter"
         tools:targetApi="31">
         <activity
+            android:name=".organizationBranch.ui.suggestionMailBox.SuggestionMailBoxActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
             android:name=".organizationBranch.ui.accountOrganization.AccountOrganizationActivity"
             android:exported="false">
             <meta-data
