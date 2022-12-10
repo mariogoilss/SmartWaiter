@@ -1,5 +1,6 @@
 package com.example.smartwaiter.clientBranch.basketUtils
 import android.content.Context
+import android.widget.Toast
 import com.example.smartwaiter.Prefs.PreLoad.Companion.prefs
 import com.example.smartwaiter.adapters.AdapterBasketRV
 import com.example.smartwaiter.inteface.*
@@ -19,27 +20,37 @@ class BasketUtils {
     companion object{
         private val db = FirebaseFirestore.getInstance()
         var saleItemList = ArrayList<SaleItem>()
-        var item = prefs.getOrgId()
+        var idOrganizations = ""
 
 
-        fun saveOnShopList(){
+        fun saveOnShopList(context: Context){
+
             db.collection("users").document(prefs.getCorreo()).get().addOnSuccessListener {
-                var arrayToHash = it.get("usrBankAccount") as HashMap<String, String> //<-- Pillamos tabla hash BBDD
-                var bankAccount = BankAccount(
-                    arrayToHash.getValue("account"),
-                    arrayToHash.getValue("expirationDate"),
-                    arrayToHash.getValue("secretNumber")
-                )
 
-                var client = Client(
-                    it.get("usrName") as String,
-                    it.get("usrImageProfile") as String,
-                    bankAccount,
-                    it.get("usrShopList") as ArrayList<ShopInfo>)
+                var arrayToHash = it.get("usrBankAccount") as HashMap<String, String> //<-- Pillamos tabla hash BBDD
+                var bankAccount = BankAccount(arrayToHash.getValue("account"), arrayToHash.getValue("expirationDate"), arrayToHash.getValue("secretNumber"))
+                var client = Client(it.get("usrName") as String, it.get("usrImageProfile") as String, bankAccount, it.get("usrShopList") as ArrayList<ShopInfo>)
+
+
+                var comparator = true
+                var position = 0
+                for (index in 0 until client.shopList.size){
+                    var hash = client.shopList[index] as HashMap<String, String>
+
+                    if (idOrganizations == hash.getValue("idOrganization")){
+                        comparator = false
+                        position
+                    }
+                }
+
+                if (!comparator){
+                    client.shopList.removeAt(position)
+                }
+
 
                 db.collection("organizations").document(prefs.getOrgId()).get().addOnSuccessListener{
                     var nameOrganization = it.get("orgName") as String
-                    var sale =  ShopInfo(item, nameOrganization)
+                    var sale =  ShopInfo(idOrganizations, nameOrganization)
 
                     client.shopList.add(sale)
 
@@ -53,18 +64,6 @@ class BasketUtils {
                         )
                     )
                 }
-
-
-                db.collection("users").document(prefs.getCorreo()).set(
-                    hashMapOf(
-                        "usrName" to client.name,
-                        "orgImageProfile" to client.imgProfile,
-                        "usrBankAccount" to client.bankAccount,
-                        "orgDrinkList" to client.shopList
-
-                    )
-                )
-
             }
         }
 
