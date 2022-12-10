@@ -60,21 +60,6 @@ class OrdersFragment : Fragment() {
     }
 
 
-
-    fun mostrar_emergente(){
-
-        val builder = AlertDialog.Builder(context)
-        builder.setTitle("El establecimiento es cerrado.")
-        builder.setMessage("¿Desea abrirlo?")
-        builder.setPositiveButton("Si",{ dialogInterface: DialogInterface, i: Int ->
-            openOrganization()
-        })
-        builder.setNegativeButton("No",{ dialogInterface: DialogInterface, i: Int -> })
-        builder.show()
-
-
-    }
-
     private fun openOrganization() {
         prefs.saveOpenOrNot(true)
         getOfBBDD(prefs.getOpenOrNot())
