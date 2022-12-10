@@ -112,7 +112,7 @@
                 android:orientation="horizontal"></LinearLayout>
 
             <TextView
-                android:id="@+id/textView20"
+                android:id="@+id/btnManageAccount"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:drawableLeft="@android:drawable/presence_invisible"

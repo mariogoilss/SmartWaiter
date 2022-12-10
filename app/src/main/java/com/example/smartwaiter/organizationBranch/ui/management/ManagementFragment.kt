@@ -16,6 +16,7 @@ import com.example.smartwaiter.R
 import com.example.smartwaiter.databinding.FragmentManagementBinding
 import com.example.smartwaiter.databinding.FragmentMenuBinding
 import com.example.smartwaiter.organizationBranch.MainOrganizationNav
+import com.example.smartwaiter.organizationBranch.ui.accountOrganization.AccountOrganizationActivity
 import com.example.smartwaiter.organizationBranch.ui.tables.TablesActivity
 import com.google.android.material.tabs.TabLayout
 
@@ -32,9 +33,15 @@ class ManagementFragment : Fragment() {
         _binding = FragmentManagementBinding.inflate(inflater, container, false)
         val btnCloseSession:Button = binding.btnMngCloseSession
         val btnManageTables:TextView = binding.btnManageTables
+        val btnManageAccount:TextView = binding.btnManageAccount
         val image:ImageView = binding.imgPrueba
         image.setImageResource(R.drawable.grafica);
         val root: View = binding.root
+
+        btnManageAccount.setOnClickListener {
+            val intent = Intent(context, AccountOrganizationActivity::class.java)
+            startActivity(intent)
+        }
 
         btnManageTables.setOnClickListener {
             val intent = Intent(context, TablesActivity::class.java)

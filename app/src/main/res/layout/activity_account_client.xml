@@ -26,7 +26,6 @@
         android:id="@+id/textView30"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="4dp"
         android:text="CVV"
         app:layout_constraintBottom_toTopOf="@+id/txtDayAccount"
         app:layout_constraintEnd_toEndOf="parent"
@@ -63,12 +62,11 @@
         android:id="@+id/textView29"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="4dp"
         android:inputType="number"
         android:text="Fecha"
         app:layout_constraintBottom_toTopOf="@+id/txtDayAccount"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.139"
+        app:layout_constraintHorizontal_bias="0.134"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
@@ -115,11 +113,10 @@
         android:id="@+id/textView28"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="4dp"
         android:text="Numero de la tarjeta"
         app:layout_constraintBottom_toTopOf="@+id/txtBankAccount"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.183"
+        app:layout_constraintHorizontal_bias="0.176"
         app:layout_constraintStart_toStartOf="parent" />
 
     <EditText
