@@ -6,7 +6,6 @@ import com.example.smartwaiter.adapters.AdapterBasketRV
 import com.example.smartwaiter.inteface.*
 import com.google.firebase.firestore.FirebaseFirestore
 import java.text.SimpleDateFormat
-import java.time.format.DateTimeFormatter
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
@@ -92,7 +91,7 @@ class BasketUtils {
             }
         }
 
-        fun getOfBBDD(adapterBasketRV: AdapterBasketRV) {
+        fun getOfBBDD(adapterBasketRV: AdapterBasketRV , context: Context) {
             db.collection("organizations").document(prefs.getOrgId()).get().addOnSuccessListener {
 
                 var arrayToHash = it.get("orgBankAccount") as HashMap<String, String> //<-- Pillamos tabla hash BBDD
@@ -114,13 +113,32 @@ class BasketUtils {
                         it.get("orgTablesList") as ArrayList<Int>)
 
 
+
                 val dateFormated = SimpleDateFormat("dd/MM/yyyy HH:mm").format(Date())
                 var salesList = SalesList(dateFormated,saleItemList,false, prefs.getTable().toLong(),benefit())
-                organization.orgSalesList.add(salesList) //<- guardamos el nuevo item
 
-                saveOnBBDD(organization, adapterBasketRV)
+                if (checker_stock(saleItemList,context)){
+                    organization.orgSalesList.add(salesList) //<- guardamos el nuevo item
+                    saveOnBBDD(organization, adapterBasketRV)
+                    Toast.makeText(context, "Compra realizada", Toast.LENGTH_SHORT).show()
+                }
+
             }
 
+        }
+
+        private fun checker_stock(saleItemList: ArrayList<SaleItem>, context: Context):Boolean{
+            var checker = true
+
+            for (i in 0 until saleItemList.size){
+
+                if(saleItemList[i].menuItem.amountStock < saleItemList[i].amount ){
+                    Toast.makeText(context, "No hay suficiente stock del producto: ${saleItemList[i].menuItem.name}", Toast.LENGTH_SHORT).show()
+                    checker = false
+                }
+            }
+
+            return checker
         }
 
         private fun benefit():Double{
