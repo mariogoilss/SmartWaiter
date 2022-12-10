@@ -75,17 +75,4 @@ class AdapterBasketRV : RecyclerView.Adapter<AdapterBasketRV.ViewHolder>(){
         }
 
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
 }

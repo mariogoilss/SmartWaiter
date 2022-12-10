@@ -1,9 +1,12 @@
 package com.example.smartwaiter.clientBranch.basketUtils
 import android.content.Context
+import android.widget.Toast
 import com.example.smartwaiter.Prefs.PreLoad.Companion.prefs
 import com.example.smartwaiter.adapters.AdapterBasketRV
 import com.example.smartwaiter.inteface.*
 import com.google.firebase.firestore.FirebaseFirestore
+import java.text.SimpleDateFormat
+import java.time.format.DateTimeFormatter
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
@@ -17,8 +20,52 @@ class BasketUtils {
     companion object{
         private val db = FirebaseFirestore.getInstance()
         var saleItemList = ArrayList<SaleItem>()
+        var idOrganizations = ""
 
 
+        fun saveOnShopList(context: Context){
+
+            db.collection("users").document(prefs.getCorreo()).get().addOnSuccessListener {
+
+                var arrayToHash = it.get("usrBankAccount") as HashMap<String, String> //<-- Pillamos tabla hash BBDD
+                var bankAccount = BankAccount(arrayToHash.getValue("account"), arrayToHash.getValue("expirationDate"), arrayToHash.getValue("secretNumber"))
+                var client = Client(it.get("usrName") as String, it.get("usrImageProfile") as String, bankAccount, it.get("usrShopList") as ArrayList<ShopInfo>)
+
+
+                var comparator = true
+                var position = 0
+                for (index in 0 until client.shopList.size){
+                    var hash = client.shopList[index] as HashMap<String, String>
+
+                    if (idOrganizations == hash.getValue("idOrganization")){
+                        comparator = false
+                        position
+                    }
+                }
+
+                if (!comparator){
+                    client.shopList.removeAt(position)
+                }
+
+
+                db.collection("organizations").document(prefs.getOrgId()).get().addOnSuccessListener{
+                    var nameOrganization = it.get("orgName") as String
+                    var sale =  ShopInfo(idOrganizations, nameOrganization)
+
+                    client.shopList.add(sale)
+
+                    db.collection("users").document(prefs.getCorreo()).set(
+                        hashMapOf(
+                            "usrName" to client.name,
+                            "usrImageProfile" to client.imgProfile,
+                            "usrBankAccount" to client.bankAccount,
+                            "usrShopList" to client.shopList
+
+                        )
+                    )
+                }
+            }
+        }
 
         fun saveSaleItemList(menuItem: MenuItem, context:Context){
             var amount:Int = 0
@@ -43,8 +90,6 @@ class BasketUtils {
                 var saleItem = SaleItem(menuItem,amount, (menuItem.price*amount))
                 saleItemList.add(saleItem)
             }
-
-
         }
 
         fun getOfBBDD(adapterBasketRV: AdapterBasketRV) {
@@ -68,7 +113,9 @@ class BasketUtils {
                         it.get("orgSuggestionsMailBox") as ArrayList<String>,
                         it.get("orgTablesList") as ArrayList<Int>)
 
-                var salesList = SalesList(Date(),saleItemList,false, prefs.getTable(),benefit())
+
+                val dateFormated = SimpleDateFormat("dd/MM/yyyy HH:mm").format(Date())
+                var salesList = SalesList(dateFormated,saleItemList,false, prefs.getTable().toLong(),benefit())
                 organization.orgSalesList.add(salesList) //<- guardamos el nuevo item
 
                 saveOnBBDD(organization, adapterBasketRV)

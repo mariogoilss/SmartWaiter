@@ -6,6 +6,91 @@
     android:layout_height="match_parent"
     tools:context=".clientBranch.ui.managementClient.ManagementClientFragment">
 
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtNameUsr"
+        app:layout_constraintVertical_bias="0.083">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="10dp"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"></LinearLayout>
+
+        </LinearLayout>
+
+        <View
+            android:id="@+id/divider4"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="?android:attr/listDivider" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="10dp"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"></LinearLayout>
+
+            <TextView
+                android:id="@+id/txtAccountUser"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:drawableLeft="@android:drawable/presence_invisible"
+                android:gravity="center|left"
+                android:text="  Admistrar cuenta"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+        <View
+            android:id="@+id/divider5"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="?android:attr/listDivider" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="10dp"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"></LinearLayout>
+
+            <TextView
+                android:id="@+id/txtListUsr"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:drawableLeft="@android:drawable/presence_invisible"
+                android:gravity="center|left"
+                android:text="  Establecimientos visitados"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+        <View
+            android:id="@+id/divider6"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="?android:attr/listDivider" />
+
+    </LinearLayout>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout"
         android:layout_width="210dp"
@@ -37,11 +122,11 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.855" />
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout"
+        app:layout_constraintVertical_bias="0.297" />
 
     <TextView
-        android:id="@+id/textView14"
+        android:id="@+id/txtNameUsr"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
