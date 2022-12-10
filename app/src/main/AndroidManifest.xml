@@ -18,6 +18,13 @@
         android:theme="@style/Theme.SmartWaiter"
         tools:targetApi="31">
         <activity
+            android:name=".clientBranch.ui.lastShop.LastShop"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
             android:name=".clientBranch.ui.accountClient.AccountClient"
             android:exported="false">
             <meta-data

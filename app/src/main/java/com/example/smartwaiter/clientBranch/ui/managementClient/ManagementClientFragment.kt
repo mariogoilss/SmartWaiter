@@ -11,6 +11,7 @@ import android.widget.TextView
 import com.example.smartwaiter.Prefs.PreLoad.Companion.prefs
 import com.example.smartwaiter.R
 import com.example.smartwaiter.clientBranch.ui.accountClient.AccountClient
+import com.example.smartwaiter.clientBranch.ui.lastShop.LastShop
 import com.example.smartwaiter.inteface.*
 import com.google.firebase.firestore.FirebaseFirestore
 
@@ -28,6 +29,7 @@ class ManagementClientFragment : Fragment() {
         val imgProfileClient = view.findViewById<ImageView>(R.id.imgProfileClient)
         val txtNameUsr = view.findViewById<TextView>(R.id.txtNameUsr)
         val txtAccountUser = view.findViewById<TextView>(R.id.txtAccountUser)
+        val txtListUsr = view.findViewById<TextView>(R.id.txtListUsr)
         imgProfileClient.setImageResource(R.drawable.profiledefaultimage);
 
 
@@ -37,6 +39,11 @@ class ManagementClientFragment : Fragment() {
 
         txtAccountUser.setOnClickListener {
             val intent = Intent(context, AccountClient::class.java)
+            startActivity(intent)
+        }
+
+        txtListUsr.setOnClickListener {
+            val intent = Intent(context, LastShop::class.java)
             startActivity(intent)
         }
 
