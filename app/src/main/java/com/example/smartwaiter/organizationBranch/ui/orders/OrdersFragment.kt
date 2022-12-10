@@ -1,14 +1,11 @@
 package com.example.smartwaiter.organizationBranch.ui.orders
 
 import android.app.AlertDialog
-import android.content.Context
 import android.content.DialogInterface
-import android.content.Intent
 import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
 import android.widget.Toast
-import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.smartwaiter.Prefs.PreLoad.Companion.prefs
@@ -16,9 +13,7 @@ import com.example.smartwaiter.R
 import com.example.smartwaiter.adapters.AdapterOrdersOrgRV
 import com.example.smartwaiter.inteface.*
 import com.example.smartwaiter.inteface.MenuItem
-import com.example.smartwaiter.organizationBranch.MainOrganizationNav
 import com.example.smartwaiter.organizationBranch.ordersUtils.OrdersUtils
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
 
@@ -48,29 +43,24 @@ class OrdersFragment : Fragment() {
         var view = inflater.inflate(R.layout.fragment_orders, container, false)
         recyclerViewOrders = view.findViewById<RecyclerView>(R.id.rvOrdersOrg)
 
-
-
-
-/*
-        val docRef = db.collection("organizations").document(prefs.getCorreo())
-        docRef.addSnapshotListener { snapshot, e ->
-            if (snapshot != null && snapshot.exists()) {
-                var list = snapshot.get("orgSalesList") as ArrayList<SalesList>
-                if (list.size != OrdersUtils.ordersList.size){
-                    Toast.makeText(context, "pillo camvio", Toast.LENGTH_SHORT).show()
-                    OrdersUtils.ordersList.clear()
-                    adapterOrdersOrgRV.ordersList.clear()
-                    load()
-
-                }else{
-                    Toast.makeText(context, "cargo normal", Toast.LENGTH_SHORT).show()
-                    reloadRecycler()
-
-                }
-            }
+        if (OrdersUtils.checkerFirstLoad){
+            firstLoad()
+            OrdersUtils.context = context!!
         }
+        recyclerViewOrders = view.findViewById<RecyclerView>(R.id.rvOrdersOrg)
+        recyclerViewOrders.setHasFixedSize(true)
+        recyclerViewOrders.layoutManager = LinearLayoutManager(context!!)
+        adapterOrdersOrgRV.AdapterOrdersOrgRV(OrdersUtils.ordersList, context!!)
+        recyclerViewOrders.adapter = adapterOrdersOrgRV
 
- */
+        OrdersUtils.listener
+
+
+
+        /*
+
+
+    */
 
 
 
@@ -78,16 +68,7 @@ class OrdersFragment : Fragment() {
         return view
     }
 
-    fun asdf(){
-        recyclerViewOrders.isVisible = prefs.getOpenOrNot()
-    }
 
-    fun reloadRecycler(){
-        recyclerViewOrders.setHasFixedSize(true)
-        recyclerViewOrders.layoutManager = LinearLayoutManager(context!!)
-        adapterOrdersOrgRV.AdapterOrdersOrgRV(OrdersUtils.ordersList, context!!)
-        recyclerViewOrders.adapter = adapterOrdersOrgRV
-    }
 
     fun mostrar_emergente(){
 
@@ -96,8 +77,6 @@ class OrdersFragment : Fragment() {
         builder.setMessage("¿Desea abrirlo?")
         builder.setPositiveButton("Si",{ dialogInterface: DialogInterface, i: Int ->
             openOrganization()
-            load()
-            reloadRecycler()
         })
         builder.setNegativeButton("No",{ dialogInterface: DialogInterface, i: Int -> })
         builder.show()
@@ -115,7 +94,7 @@ class OrdersFragment : Fragment() {
         getOfBBDD(prefs.getOpenOrNot())
     }
 
-    private fun load() {
+    private fun firstLoad() {
         db.collection("organizations").document(prefs.getCorreo()).get().addOnSuccessListener {
 
             if(it.get("orgSalesList") != null){
@@ -138,7 +117,18 @@ class OrdersFragment : Fragment() {
                     OrdersUtils.ordersList.add(salesList)
                 }
 
-                reloadRecycler()
+                if (OrdersUtils.checkerFirstLoad){
+
+                    recyclerViewOrders.setHasFixedSize(true)
+                    recyclerViewOrders.layoutManager = LinearLayoutManager(context!!)
+                    adapterOrdersOrgRV.AdapterOrdersOrgRV(OrdersUtils.ordersList, context!!)
+                    recyclerViewOrders.adapter = adapterOrdersOrgRV
+
+                    OrdersUtils.checkerFirstLoad = false
+                    OrdersUtils.adapter = adapterOrdersOrgRV
+                }
+
+
             }
         }
 
@@ -223,6 +213,10 @@ class OrdersFragment : Fragment() {
         return super.onOptionsItemSelected(item)
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        OrdersUtils.stopListener()
+    }
 
 
 
