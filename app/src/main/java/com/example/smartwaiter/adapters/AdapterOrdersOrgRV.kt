@@ -1,16 +1,21 @@
 package com.example.smartwaiter.adapters
 
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
+import com.example.smartwaiter.MainActivity
 import com.example.smartwaiter.Prefs.PreLoad
 import com.example.smartwaiter.R
 import com.example.smartwaiter.inteface.*
+import com.example.smartwaiter.organizationBranch.ui.orderDetail.OrderDatailActivity
+import com.example.smartwaiter.registerType.RegisterClientActivity
 import com.example.smartwaiter.utils.UtilsBBDD
 import com.google.firebase.firestore.FirebaseFirestore
 
@@ -55,7 +60,7 @@ class AdapterOrdersOrgRV : RecyclerView.Adapter<AdapterOrdersOrgRV.ViewHolder>()
         return ordersList.size
     }
 
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    class ViewHolder(view: View) : RecyclerView.ViewHolder(view){
 
         val txtTableOrder = view.findViewById<TextView>(R.id.txtTableOrder)!!
         val txtDateOrder = view.findViewById<TextView>(R.id.txtDateOrder)!!
@@ -71,7 +76,21 @@ class AdapterOrdersOrgRV : RecyclerView.Adapter<AdapterOrdersOrgRV.ViewHolder>()
             }
 
             btnViewOrder.setOnClickListener {
-                Toast.makeText(context, "" +pos, Toast.LENGTH_SHORT).show()
+
+                var position = 0
+                for (i in 0 until originalList.size){
+                    //Toast.makeText(context, "posrv -> ${pos}, posbbdd -> $i", Toast.LENGTH_SHORT).show()
+                    if (originalList[i] == ordersList){
+                        position = i
+                    }
+                }
+
+                var intent = Intent(context, OrderDatailActivity::class.java)
+                intent.putExtra("position", position)
+                context.startActivity(intent)
+
+
+
             }
         }
 
