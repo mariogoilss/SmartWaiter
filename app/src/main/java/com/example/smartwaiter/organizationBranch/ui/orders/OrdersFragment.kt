@@ -51,7 +51,7 @@ class OrdersFragment : Fragment() {
 
 
 
-
+/*
         val docRef = db.collection("organizations").document(prefs.getCorreo())
         docRef.addSnapshotListener { snapshot, e ->
             if (snapshot != null && snapshot.exists()) {
@@ -69,6 +69,8 @@ class OrdersFragment : Fragment() {
                 }
             }
         }
+
+ */
 
 
 

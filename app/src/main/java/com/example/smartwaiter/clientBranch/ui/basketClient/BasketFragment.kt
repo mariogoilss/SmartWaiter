@@ -36,8 +36,7 @@ class BasketFragment : Fragment() {
             if (BasketUtils.saleItemList.size > 0){
                 BasketUtils.saveOnShopList(context!!)
                 Thread.sleep(500)
-                BasketUtils.getOfBBDD(adapterBasketRV)
-                Toast.makeText(context, "Compra realizada", Toast.LENGTH_SHORT).show()
+                BasketUtils.getOfBBDD(adapterBasketRV, context!!)
             }else{
                 Toast.makeText(context, "La cesta esta vacia", Toast.LENGTH_SHORT).show()
             }
