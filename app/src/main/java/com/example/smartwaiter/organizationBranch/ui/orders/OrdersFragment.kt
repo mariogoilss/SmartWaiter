@@ -56,15 +56,6 @@ class OrdersFragment : Fragment() {
         OrdersUtils.listener
 
 
-
-        /*
-
-
-    */
-
-
-
-
         return view
     }
 
