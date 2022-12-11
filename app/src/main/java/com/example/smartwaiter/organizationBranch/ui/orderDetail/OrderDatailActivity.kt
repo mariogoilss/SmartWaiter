@@ -50,7 +50,7 @@ class OrderDatailActivity : AppCompatActivity() {
             var objList = SaleItem(
                 menuItem,
                 (hash.get("amount") as Long).toInt(),
-                hash.get("totalPrice") as Double)
+                0.0)
 
             listItem.add(objList)
         }

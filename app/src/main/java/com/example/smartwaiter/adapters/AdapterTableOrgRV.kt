@@ -120,7 +120,7 @@ class AdapterTableOrgRV : RecyclerView.Adapter<AdapterTableOrgRV.ViewHolder>(){
                     Toast.makeText(context, "Pdf creado correctamente", Toast.LENGTH_SHORT).show()
                 } catch (e:java.lang.Exception){
                     e.printStackTrace()
-                    Toast.makeText(context, "Nop", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "Error al crear el Pdf", Toast.LENGTH_SHORT).show()
                 }
                 pdfDocument.close()
 

@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.ImageButton
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -143,16 +144,22 @@ class FoodFragment : Fragment() {
         // Fragment Functions
         // check_checkBox(cbx1, cbx2,cbx3,cbx4,cbx5, cbx6, cbx7,cbx8)
         save.setOnClickListener {
-            var menuItem = MenuItem(
-                name.text.toString(),
-                description.text.toString(),
-                price.text.toString().toDouble(),
-                check_checkBox(view),
-                "",
-                amount.text.toString().toInt()
-            )
-            getOfBBDD(idOrganization, menuItem)
-            dialog.onBackPressed()
+
+            if(name.text.isNotEmpty() && description.text.isNotEmpty() && price.text.isNotEmpty() && amount.text.isNotEmpty()){
+                var menuItem = MenuItem(
+                    name.text.toString(),
+                    description.text.toString(),
+                    price.text.toString().toDouble(),
+                    check_checkBox(view),
+                    "",
+                    amount.text.toString().toInt()
+                )
+                getOfBBDD(idOrganization, menuItem)
+                dialog.onBackPressed()
+            }else{
+                Toast.makeText(context, "Algunos de los campos estan incorrectos o vacios", Toast.LENGTH_SHORT).show()
+            }
+
         }
 
 
