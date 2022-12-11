@@ -117,8 +117,10 @@ class BasketUtils {
                 val dateFormated = SimpleDateFormat("dd/MM/yyyy HH:mm").format(Date())
                 var salesList = SalesList(dateFormated,saleItemList,false, prefs.getTable().toLong(),benefit())
 
-                if (checker_stock(saleItemList,context)){
+                if (checker_stock(saleItemList,context, organization)){
                     organization.orgSalesList.add(salesList) //<- guardamos el nuevo item
+                    organization.orgFoodList = minus_stock_food(organization.orgFoodList, saleItemList,context)
+                    organization.orgDrinkList = minus_stock_drink(organization.orgDrinkList, saleItemList,context)
                     saveOnBBDD(organization, adapterBasketRV)
                     Toast.makeText(context, "Compra realizada", Toast.LENGTH_SHORT).show()
                 }
@@ -127,14 +129,96 @@ class BasketUtils {
 
         }
 
-        private fun checker_stock(saleItemList: ArrayList<SaleItem>, context: Context):Boolean{
+        private fun minus_stock_food(orgFoodList: ArrayList<MenuItem>, saleItemList: ArrayList<SaleItem>, context: Context): ArrayList<MenuItem> {
+            for (i in 0 until orgFoodList.size){
+                var hash = orgFoodList[i] as HashMap<String, String> //<-- Pillamos tabla hash BBDD
+
+                var menuObj = MenuItem(
+                    hash["name"] as String,
+                    hash["description"] as String,
+                    hash["price"] as Double,
+                    hash["allergens"] as ArrayList<Int>,
+                    hash["image"] as String,
+                    (hash["amountStock"] as Long).toInt())
+
+                for(x in 0 until saleItemList.size){
+                    if(menuObj.name == saleItemList[x].menuItem.name){
+                        menuObj.amountStock -= saleItemList[x].amount
+                    }
+                }
+                orgFoodList[i] = menuObj
+            }
+            return orgFoodList
+        }
+
+        private fun minus_stock_drink(orgDrinkList: ArrayList<MenuItem>, saleItemList: ArrayList<SaleItem>, context: Context): ArrayList<MenuItem> {
+            for (i in 0 until orgDrinkList.size){
+                var hash = orgDrinkList[i] as HashMap<String, String> //<-- Pillamos tabla hash BBDD
+
+                var menuObj = MenuItem(
+                    hash["name"] as String,
+                    hash["description"] as String,
+                    hash["price"] as Double,
+                    hash["allergens"] as ArrayList<Int>,
+                    hash["image"] as String,
+                    (hash["amountStock"] as Long).toInt())
+
+                for(x in 0 until saleItemList.size){
+                    if(menuObj.name == saleItemList[x].menuItem.name){
+                        menuObj.amountStock -= saleItemList[x].amount
+                    }
+                }
+                orgDrinkList[i] = menuObj
+            }
+            return orgDrinkList
+        }
+
+
+
+        private fun checker_stock(saleItemList: ArrayList<SaleItem>, context: Context, organization: Organization):Boolean{
             var checker = true
 
-            for (i in 0 until saleItemList.size){
 
-                if(saleItemList[i].menuItem.amountStock < saleItemList[i].amount ){
-                    Toast.makeText(context, "No hay suficiente stock del producto: ${saleItemList[i].menuItem.name}", Toast.LENGTH_SHORT).show()
-                    checker = false
+            for (y in 0 until organization.orgFoodList.size){
+                for (z in 0 until saleItemList.size){
+                    var hash = organization.orgFoodList[y] as HashMap<String, String> //<-- Pillamos tabla hash BBDD
+
+                    var menuObj = MenuItem(
+                        hash["name"] as String,
+                        hash["description"] as String,
+                        hash["price"] as Double,
+                        hash["allergens"] as ArrayList<Int>,
+                        hash["image"] as String,
+                        (hash["amountStock"] as Long).toInt())
+
+                    if(menuObj.name == saleItemList[z].menuItem.name ){
+                        if (menuObj.amountStock < saleItemList[z].amount){
+                            Toast.makeText(context, "No hay suficiente stock del producto: ${menuObj.name}", Toast.LENGTH_SHORT).show()
+                            checker = false
+                        }
+                    }
+                }
+            }
+
+
+            for (i in 0 until organization.orgDrinkList.size){
+                for (x in 0 until saleItemList.size){
+                    var hash = organization.orgDrinkList[i] as HashMap<String, String> //<-- Pillamos tabla hash BBDD
+
+                    var menuObj = MenuItem(
+                        hash["name"] as String,
+                        hash["description"] as String,
+                        hash["price"] as Double,
+                        hash["allergens"] as ArrayList<Int>,
+                        hash["image"] as String,
+                        (hash["amountStock"] as Long).toInt())
+
+                    if(menuObj.name == saleItemList[x].menuItem.name ){
+                        if (menuObj.amountStock < saleItemList[x].amount){
+                            Toast.makeText(context, "No hay suficiente stock del producto: ${menuObj.name}", Toast.LENGTH_SHORT).show()
+                            checker = false
+                        }
+                    }
                 }
             }
 
