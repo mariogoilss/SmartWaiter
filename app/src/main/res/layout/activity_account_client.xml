@@ -122,10 +122,10 @@
     <EditText
         android:id="@+id/txtCvvAccount"
         android:layout_width="100dp"
+        android:inputType="number"
         android:layout_height="60dp"
         android:ems="10"
         android:gravity="bottom"
-        android:inputType="textPersonName"
         android:maxLength="4"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
