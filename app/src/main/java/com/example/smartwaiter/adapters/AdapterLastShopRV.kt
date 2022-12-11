@@ -97,7 +97,7 @@ class AdapterLastShopRV : RecyclerView.Adapter<AdapterLastShopRV.ViewHolder>(){
                 )
 
                 var organization =
-                    Organization(idOrganization,
+                    Organization(it.get("orgName") as String,
                         it.get("orgCif") as String,
                         it.get("orgFoodList") as ArrayList<MenuItem>,
                         it.get("orgDrinkList") as ArrayList<MenuItem>,
