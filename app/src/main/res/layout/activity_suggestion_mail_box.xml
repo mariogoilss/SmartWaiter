@@ -4,11 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:backgroundTint="@color/white"
-    tools:context=".organizationBranch.ui.orders.OrdersFragment">
+    tools:context=".organizationBranch.ui.suggestionMailBox.SuggestionMailBoxActivity">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvOrdersOrg"
+        android:id="@+id/rvSuggestionMailBox"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"

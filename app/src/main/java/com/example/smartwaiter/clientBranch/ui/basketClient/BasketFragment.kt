@@ -9,6 +9,7 @@ import android.widget.Button
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.smartwaiter.Prefs.PreLoad.Companion.prefs
 import com.example.smartwaiter.R
 import com.example.smartwaiter.adapters.AdapterBasketRV
 import com.example.smartwaiter.clientBranch.basketUtils.BasketUtils
@@ -28,10 +29,14 @@ class BasketFragment : Fragment() {
 
         var btnSendBasket = view.findViewById<Button>(R.id.btnSendBasket)
 
+
         btnSendBasket.setOnClickListener {
+
+            BasketUtils.idOrganizations = prefs.getOrgId()
             if (BasketUtils.saleItemList.size > 0){
-                BasketUtils.getOfBBDD(adapterBasketRV)
-                Toast.makeText(context, "Compra realizada", Toast.LENGTH_SHORT).show()
+                BasketUtils.saveOnShopList(context!!)
+                Thread.sleep(500)
+                BasketUtils.getOfBBDD(adapterBasketRV, context!!)
             }else{
                 Toast.makeText(context, "La cesta esta vacia", Toast.LENGTH_SHORT).show()
             }

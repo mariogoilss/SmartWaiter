@@ -1,6 +1,7 @@
 package com.example.smartwaiter.adapters
 
 import android.content.Context
+import android.content.DialogInterface
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,7 +17,7 @@ import com.example.smartwaiter.inteface.*
 import com.example.smartwaiter.menu.arrayDrinkListOrg
 import com.example.smartwaiter.menu.arrayFoodListOrg
 import com.google.firebase.firestore.FirebaseFirestore
-import com.example.smartwaiter.clientBranch.basketUtils.BasketUtils.*
+import com.example.smartwaiter.utils.UtilsBBDD
 
 private val db = FirebaseFirestore.getInstance()
 class AdapterMenuOrgRV : RecyclerView.Adapter<AdapterMenuOrgRV.ViewHolder>(){
@@ -66,6 +67,12 @@ class AdapterMenuOrgRV : RecyclerView.Adapter<AdapterMenuOrgRV.ViewHolder>(){
                 loadDrinkFragment(context, pos, itemMenu, adapter,foodOrDrink)
             })
 
+            itemView.setOnLongClickListener(View.OnLongClickListener {
+
+                mostrar_emergente(context, pos, adapter,foodOrDrink)
+                true
+            })
+
             if(prefs.getOrgOrUser()){
                 btnAddBasket.isVisible = false
             }
@@ -75,6 +82,27 @@ class AdapterMenuOrgRV : RecyclerView.Adapter<AdapterMenuOrgRV.ViewHolder>(){
             }
 
 
+        }
+
+        fun mostrar_emergente(
+            context: Context,
+            pos: Int,
+            adapter: AdapterMenuOrgRV,
+            foodOrDrink: Boolean
+
+
+        ){
+            val builder = android.app.AlertDialog.Builder(context)
+            builder.setTitle("Alerta")
+            builder.setMessage("¿Desea eliminar este producto?")
+            builder.setPositiveButton("Si") { dialogInterface: DialogInterface, i: Int ->
+
+                outOfBBDD(pos, adapter, foodOrDrink)
+            }
+
+            builder.setNegativeButton("No",{ dialogInterface: DialogInterface, i: Int ->
+            })
+            builder.show()
         }
 
         private fun loadDrinkFragment(context: Context, pos: Int, itemMenu: MenuItem, adapter: AdapterMenuOrgRV, foodOrDrink:Boolean){
@@ -181,6 +209,47 @@ class AdapterMenuOrgRV : RecyclerView.Adapter<AdapterMenuOrgRV.ViewHolder>(){
 
         }
 
+        private fun outOfBBDD(
+            pos: Int,
+            adapter: AdapterMenuOrgRV,
+            foodOrDrink: Boolean
+        ){
+            db.collection("organizations").document(prefs.getCorreo()).get().addOnSuccessListener {
+
+                var arrayToHash = it.get("orgBankAccount") as HashMap<String, String> //<-- Pillamos tabla hash BBDD
+                var bankAccount = BankAccount(
+                    arrayToHash.getValue("account"),
+                    arrayToHash.getValue("expirationDate"),
+                    arrayToHash.getValue("secretNumber")
+                )
+
+                var organization =
+                    Organization(it.get("orgName") as String,
+                        it.get("orgCif") as String,
+                        it.get("orgFoodList") as ArrayList<MenuItem>,
+                        it.get("orgDrinkList") as ArrayList<MenuItem>,
+                        it.get("orgOpenOrNot") as Boolean,
+                        it.get("orgSalesList") as ArrayList<SalesList>,
+                        bankAccount,
+                        it.get("orgSuggestionsMailBox") as ArrayList<String>,
+                        it.get("orgTablesList") as ArrayList<Int>)
+
+                if(foodOrDrink){
+                    organization.orgFoodList.removeAt(pos)
+                }else{
+                    organization.orgDrinkList.removeAt(pos)
+                }
+                adapter.itemMenuList.removeAt(pos)
+                adapter.notifyItemRemoved(pos)
+                adapter.notifyItemRangeChanged(0, adapter.itemMenuList.size)
+
+
+                adapter.notifyItemChanged(pos)
+                UtilsBBDD.saveOnBBDD(organization)
+
+            }
+        }
+
         private fun getOfBBDD(
             id: String,
             menuItem: MenuItem,
@@ -218,24 +287,9 @@ class AdapterMenuOrgRV : RecyclerView.Adapter<AdapterMenuOrgRV.ViewHolder>(){
 
 
                 adapter.notifyItemChanged(pos)
-                saveOnBBDD(organization)
-            }
-        }
+                UtilsBBDD.saveOnBBDD(organization)
 
-        private fun saveOnBBDD(organization: Organization){
-            db.collection("organizations").document(PreLoad.prefs.getCorreo()).set(
-                hashMapOf(
-                    "orgName" to organization.orgName,
-                    "orgCif" to organization.orgCif,
-                    "orgFoodList" to organization.orgFoodList,
-                    "orgDrinkList" to organization.orgDrinkList,
-                    "orgOpenOrNot" to organization.orgOpenOrNot,
-                    "orgSalesList" to organization.orgSalesList,
-                    "orgBankAccount" to organization.orgBankAccount,
-                    "orgSuggestionsMailBox" to organization.orgSuggestionsMailBox,
-                    "orgTablesList" to organization.orgTablesList
-                )
-            )
+            }
         }
 
         private fun findImage(image: ImageView, itemMenu: MenuItem, foodOrDrink: Boolean): ImageView {
