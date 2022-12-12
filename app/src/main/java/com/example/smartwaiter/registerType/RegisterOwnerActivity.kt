@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
+import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.Toast
 import com.example.smartwaiter.MainActivity
@@ -28,25 +29,27 @@ class RegisterOwnerActivity : AppCompatActivity() {
         val pwd = findViewById<EditText>(R.id.txtPwd)
         val name = findViewById<EditText>(R.id.txtName)
         val cif = findViewById<EditText>(R.id.txtCif)
-
+        val cbxTermsOwner = findViewById<CheckBox>(R.id.cbxTermsOwner)
 
         btn.setOnClickListener {
-
-            if (email.text.isNotEmpty() && pwd.text.isNotEmpty() && name.text.isNotEmpty() && cif.text.isNotEmpty()){
-                FirebaseAuth.getInstance().createUserWithEmailAndPassword(email.text.toString(),pwd.text.toString()).addOnCompleteListener {
-                    if (it.isSuccessful){
-                        saveInBBDD(name.text.toString(),email.text.toString(),cif.text.toString())
-                        Toast.makeText(this, "Registro completo, ya puede disfrutar de la aplicacion", Toast.LENGTH_SHORT).show()
-                        val intent = Intent(this, MainActivity::class.java)
-                        startActivity(intent)
-                    } else {
-                        Toast.makeText(this, "Error el correo o la contraseña no es valida", Toast.LENGTH_SHORT).show()
+            if (cbxTermsOwner.isChecked){
+                if (email.text.isNotEmpty() && pwd.text.isNotEmpty() && name.text.isNotEmpty() && cif.text.isNotEmpty()){
+                    FirebaseAuth.getInstance().createUserWithEmailAndPassword(email.text.toString(),pwd.text.toString()).addOnCompleteListener {
+                        if (it.isSuccessful){
+                            saveInBBDD(name.text.toString(),email.text.toString(),cif.text.toString())
+                            Toast.makeText(this, "Registro completo, ya puede disfrutar de la aplicacion", Toast.LENGTH_SHORT).show()
+                            val intent = Intent(this, MainActivity::class.java)
+                            startActivity(intent)
+                        } else {
+                            Toast.makeText(this, "Error el correo o la contraseña no es valida", Toast.LENGTH_SHORT).show()
+                        }
                     }
+                }else{
+                    Toast.makeText(this, "Los campos del formulario no pueden estar vacios", Toast.LENGTH_SHORT).show()
                 }
             }else{
-                Toast.makeText(this, "Los campos del formulario no pueden estar vacios", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Debe aceptar los terminos y condiciones del servicio.", Toast.LENGTH_SHORT).show()
             }
-
         }
     }
 
