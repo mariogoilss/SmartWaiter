@@ -126,12 +126,7 @@ class AdapterTableOrgRV : RecyclerView.Adapter<AdapterTableOrgRV.ViewHolder>(){
 
             }
 
-
-
-
         }
-
-
 
         private fun getOfBBDD(pos: Int, adapter:AdapterTableOrgRV) {
             db.collection("organizations").document(prefs.getCorreo()).get().addOnSuccessListener {
@@ -162,8 +157,6 @@ class AdapterTableOrgRV : RecyclerView.Adapter<AdapterTableOrgRV.ViewHolder>(){
 
                 UtilsBBDD.saveOnBBDD(organization)
             }
-
-
         }
 
 
@@ -178,17 +171,5 @@ class AdapterTableOrgRV : RecyclerView.Adapter<AdapterTableOrgRV.ViewHolder>(){
         }
 
     }
-
-
-
-
-
-
-
-
-
-
-
-
 
 }
