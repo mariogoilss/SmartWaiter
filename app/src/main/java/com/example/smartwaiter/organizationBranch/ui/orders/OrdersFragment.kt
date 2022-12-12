@@ -53,7 +53,8 @@ class OrdersFragment : Fragment() {
         adapterOrdersOrgRV.AdapterOrdersOrgRV(OrdersUtils.ordersList, context!!)
         recyclerViewOrders.adapter = adapterOrdersOrgRV
 
-        OrdersUtils.listener
+        if(prefs.getOpenOrNot()){OrdersUtils.listener}
+
 
 
         return view
@@ -159,6 +160,7 @@ class OrdersFragment : Fragment() {
                 if (!prefs.getOpenOrNot()){
                     openOrganization()
                     Toast.makeText(context, "Establecimiento abierto", Toast.LENGTH_SHORT).show()
+                    OrdersUtils.listener
                 }else{
                     val builder = AlertDialog.Builder(context)
                     builder.setTitle("Atencion")
@@ -173,7 +175,7 @@ class OrdersFragment : Fragment() {
                 if(prefs.getOpenOrNot()){
                     closeOrganization()
                     Toast.makeText(context, "Establecimiento cerrado", Toast.LENGTH_SHORT).show()
-
+                    OrdersUtils.stopListener()
 
                 }else{
                     val builder = AlertDialog.Builder(context)
@@ -191,7 +193,7 @@ class OrdersFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        OrdersUtils.stopListener()
+
     }
 
 
