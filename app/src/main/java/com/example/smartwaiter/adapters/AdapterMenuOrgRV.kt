@@ -84,14 +84,7 @@ class AdapterMenuOrgRV : RecyclerView.Adapter<AdapterMenuOrgRV.ViewHolder>(){
 
         }
 
-        fun mostrar_emergente(
-            context: Context,
-            pos: Int,
-            adapter: AdapterMenuOrgRV,
-            foodOrDrink: Boolean
-
-
-        ){
+        fun mostrar_emergente(context: Context, pos: Int, adapter: AdapterMenuOrgRV, foodOrDrink: Boolean){
             val builder = android.app.AlertDialog.Builder(context)
             builder.setTitle("Alerta")
             builder.setMessage("¿Desea eliminar este producto?")
@@ -209,11 +202,7 @@ class AdapterMenuOrgRV : RecyclerView.Adapter<AdapterMenuOrgRV.ViewHolder>(){
 
         }
 
-        private fun outOfBBDD(
-            pos: Int,
-            adapter: AdapterMenuOrgRV,
-            foodOrDrink: Boolean
-        ){
+        private fun outOfBBDD(pos: Int, adapter: AdapterMenuOrgRV, foodOrDrink: Boolean){
             db.collection("organizations").document(prefs.getCorreo()).get().addOnSuccessListener {
 
                 var arrayToHash = it.get("orgBankAccount") as HashMap<String, String> //<-- Pillamos tabla hash BBDD
@@ -250,13 +239,7 @@ class AdapterMenuOrgRV : RecyclerView.Adapter<AdapterMenuOrgRV.ViewHolder>(){
             }
         }
 
-        private fun getOfBBDD(
-            id: String,
-            menuItem: MenuItem,
-            pos: Int,
-            adapter: AdapterMenuOrgRV,
-            foodOrDrink: Boolean
-        ){
+        private fun getOfBBDD(id: String, menuItem: MenuItem, pos: Int, adapter: AdapterMenuOrgRV, foodOrDrink: Boolean){
             db.collection("organizations").document(id).get().addOnSuccessListener {
 
                 var arrayToHash = it.get("orgBankAccount") as HashMap<String, String> //<-- Pillamos tabla hash BBDD
@@ -305,11 +288,6 @@ class AdapterMenuOrgRV : RecyclerView.Adapter<AdapterMenuOrgRV.ViewHolder>(){
             return image
         }
 
-
     }
-
-
-
-
 
 }

@@ -7,15 +7,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.TextView
-import android.widget.Toast
-import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
-import com.example.smartwaiter.MainActivity
 import com.example.smartwaiter.Prefs.PreLoad
 import com.example.smartwaiter.R
 import com.example.smartwaiter.inteface.*
 import com.example.smartwaiter.organizationBranch.ui.orderDetail.OrderDatailActivity
-import com.example.smartwaiter.registerType.RegisterClientActivity
 import com.example.smartwaiter.utils.UtilsBBDD
 import com.google.firebase.firestore.FirebaseFirestore
 
@@ -72,7 +68,7 @@ class AdapterOrdersOrgRV : RecyclerView.Adapter<AdapterOrdersOrgRV.ViewHolder>()
             txtDateOrder.text = ordersList.date.toString()
 
             btnCheckOrder.setOnClickListener {
-                getOfBBDD(pos,context ,adapter, originalList,ordersList)
+                getOfBBDD(pos,adapter,originalList,ordersList)
             }
 
             btnViewOrder.setOnClickListener {
@@ -94,21 +90,11 @@ class AdapterOrdersOrgRV : RecyclerView.Adapter<AdapterOrdersOrgRV.ViewHolder>()
             }
         }
 
-        private fun getOfBBDD(
-            pos: Int,
-            context: Context,
-            adapter: AdapterOrdersOrgRV,
-            originalList: ArrayList<SalesList>,
-            objSale: SalesList
-        ) {
-
-
+        private fun getOfBBDD(pos: Int, adapter: AdapterOrdersOrgRV, originalList: ArrayList<SalesList>, objSale: SalesList) {
 
             db.collection("organizations").document(PreLoad.prefs.getCorreo()).get().addOnSuccessListener {
 
-                var position = 0
                 for (i in 0 until originalList.size){
-                    //Toast.makeText(context, "posrv -> ${pos}, posbbdd -> $i", Toast.LENGTH_SHORT).show()
                     if (originalList[i] == objSale){
                         originalList[i].done = true
                     }
@@ -136,16 +122,11 @@ class AdapterOrdersOrgRV : RecyclerView.Adapter<AdapterOrdersOrgRV.ViewHolder>()
                 organization.orgSalesList = originalList
                 UtilsBBDD.saveOnBBDD(organization)
 
-
                 adapter.ordersList.removeAt(pos)
                 adapter.notifyItemRemoved(pos)
                 adapter.notifyItemRangeChanged( 0, adapter.ordersList.size)
-
             }
-
         }
-
-
 
     }
 }

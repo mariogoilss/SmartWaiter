@@ -10,10 +10,8 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
-import com.example.smartwaiter.Prefs.PreLoad
 import com.example.smartwaiter.R
 import com.example.smartwaiter.inteface.*
-import com.example.smartwaiter.utils.UtilsBBDD
 import com.google.firebase.firestore.FirebaseFirestore
 
 private val db = FirebaseFirestore.getInstance()

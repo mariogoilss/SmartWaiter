@@ -126,6 +126,5 @@ class AdapterSuggestionMBRV : RecyclerView.Adapter<AdapterSuggestionMBRV.ViewHol
             }
         }
 
-
     }
 }
